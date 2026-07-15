@@ -1,0 +1,325 @@
+{
+  "currency": "EUR",
+  "currencySymbol": "€",
+  "common": {
+    "loading": "Loading",
+    "viewAll": "View more products",
+    "search": "Search",
+    "required_field": "This field is required",
+    "invalid_email": "Please enter a valid email address",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "noProductsAvailable": "No products available at the moment."
+  },
+  "newsletterSuccessMessage": "You have successfully subscribed to our newsletter! Thank you.",
+  "banners": {
+    "slides": [
+      {
+        "title": "Winter Collection: -30%",
+        "subtitle": "Order today and save!"
+      },
+      {
+        "title": "New Tech Has Arrived!",
+        "subtitle": "Discover the latest gadgets and innovations."
+      },
+      {
+        "title": "Weekend Specials",
+        "subtitle": "Offers available for only 48 hours!"
+      }
+    ]
+  },
+  "shippingAbove20": "Free shipping above €190!",
+  "breadcrumb": {
+    "home": "Home",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "shipping": "Shipping Details",
+    "payment": "Payment Method",
+    "summary": "Summary",
+    "orderComplete": "Order Confirmation",
+    "newArrivals": "New Arrivals",
+    "discounted": "Discounted Products",
+    "profile": "My Profile",
+    "wishlist": "Wishlist",
+    "login": "Login"
+  },
+  "category": "View Category",
+  "cartButton": "View Category",
+  "categories": {
+    "mainTitle": "Categories",
+    "Electronics": "Electronics",
+    "Home Appliances": "Home Appliances",
+    "Furniture": "Furniture",
+    "description": "Discover our latest products"
+  },
+  "hero": {
+    "desktop_image": "/images/banner_en_desktop.avif",
+    "mobile_image": "/images/banner_en_mobile.avif",
+    "alt_text": "Webshop Promotional Banner"
+  },
+  "product": {
+    "newArrivals": "New Arrivals",
+    "discountedOffers": "Discounted Offers",
+    "new": "NEW",
+    "newProductsTitle": "New Products",
+    "discountedProductsTitle": "Discounted Products"
+  },
+  "shipping": "Delivery within 2-3 days",
+  "payWithCard": "Pay with Card",
+  "return": "14-day return policy",
+  "dontMiss": "Don't miss anything!",
+  "subscribe": "Subscribe to receive more discounts!",
+  "subscribeButton": "Subscribe",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "email": "Email Address",
+  "quotes": {
+    "title": "What Our Customers Say",
+    "quote_1_text": "The order arrived incredibly fast and the quality is top class. Highly recommend!",
+    "quote_1_author": "Laura K.",
+    "quote_2_text": "The customer service was very helpful with the size issue. I'm satisfied with the purchase, even though delivery took one extra day.",
+    "quote_2_author": "Max P.",
+    "quote_3_text": "This is the best online store I've ever used. Simple ordering process and fair prices. Would happily shop here again!",
+    "quote_3_author": "Lena R."
+  },
+  "customerService": "Customer Service: Mon-Fri",
+  "info": "Information",
+  "contact": "Contact",
+  "terms": "Terms and Conditions",
+  "dataProcessingInfo": "Privacy Policy",
+  "shippingInfo": "Shipping Information",
+  "withdrawal": "Right of Withdrawal",
+  "shoppingTips": "Shopping Tips",
+  "sizeChart": "Size Chart",
+  "brands": "Brands",
+  "allRightsReserved": "All Rights Reserved",
+  "addToCart": "Add to Cart",
+  "ratingCount": "reviews",
+  "notification": {
+    "addedToCart": "Added to cart!",
+    "productAdded": "added. Currently: {quantity} pcs",
+    "goToCart": "View Cart",
+    "continueShopping": "Continue Shopping",
+    "quantity": "pcs"
+  },
+  "comments": {
+    "writeComment": "Write a review",
+    "reviewTitle": "Product Reviews",
+    "commentPlaceholder": "Write your review here...",
+    "submit": "Submit Review",
+    "anonymous": "Anonymous",
+    "noDate": "Unknown date",
+    "loginRequired": "Please log in to write a review!",
+    "rating": "Rating",
+    "star": "star",
+    "submitting": "Submitting...",
+    "missingFields": "Please provide both a rating and text!",
+    "submitError": "Error submitting review. Please try again.",
+    "fetchError": "Failed to load reviews.",
+    "noReviews": "There are no reviews for this product yet. Be the first!"
+  },
+  "cart": {
+    "title": "My Cart",
+    "items_count": "items",
+    "empty": "Your cart is empty",
+    "quantity": "Quantity",
+    "price": "Price",
+    "remove": "Remove",
+    "emptying": "Empty Cart",
+    "total": "Total",
+    "toPayment": "Proceed to Checkout",
+    "summary": "Summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "free": "Free",
+    "browse_products": "Continue Shopping"
+  },
+  "login": {
+    "username": "Username",
+    "password": "Password",
+    "submit": "Login",
+    "loggingIn": "Logging in"
+  },
+  "auth": {
+    "loginTitle": "Login",
+    "loginSubtitle": "Welcome back! Please sign in.",
+    "registerTitle": "Register",
+    "registerSubtitle": "Create a new account.",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Doe",
+    "email": "Email Address",
+    "emailPlaceholder": "example@email.com",
+    "password": "Password",
+    "passwordPlaceholder": "Minimum 8 characters",
+    "passwordConfirm": "Confirm Password",
+    "passwordConfirmPlaceholder": "Re-enter your password",
+    "loginButton": "Login",
+    "registerButton": "Register",
+    "loggingIn": "Logging in...",
+    "registering": "Registering...",
+    "errorOccurred": "An error occurred!",
+    "success": "Success!",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "switchToRegister": "Register",
+    "switchToLogin": "Login",
+    "forgotPassword": "Forgot Password?",
+    "resendVerification": "Resend verification email",
+    "resendSuccess": "Verification email sent successfully. Please check your inbox.",
+    "resendError": "Error resending email: ",
+    "registerSuccessMessage": "Registration successful! Please check your email for the confirmation link.",
+    "registerSuccessWithVerification": "Registration successful! You will receive an email to activate your account shortly.",
+    "registerFailed": "An error occurred during registration. Please try again later.",
+    "registerUnexpectedError": "An unexpected error occurred during registration.",
+    "forgotPasswordTitle": "Forgot your password?",
+    "sendResetLink": "Send Reset Link",
+    "sending": "Sending...",
+    "backToLogin": "Back to Login"
+  },
+  "emailVerified": {
+    "successTitle": "Email Verified!",
+    "successMessage": "You have successfully verified your email address. You can now log in.",
+    "alreadyTitle": "Already Verified!",
+    "alreadyMessage": "This email address has already been verified. Please log in.",
+    "errorTitle": "Verification Error!",
+    "errorMessage": "The verification link is invalid or has expired. Please try logging in again or request a new verification email.",
+    "goToLogin": "Go to Login"
+  },
+  "checkout": {
+    "shippingDetails": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "house_number": "House Number"
+    },
+    "complete": {
+      "checkingStatus": "Checking payment status...",
+      "orderSuccess": "Your order has been successfully processed!",
+      "paymentFailed": "Payment Error",
+      "paymentNotConfirmed": "We could not confirm your payment.",
+      "redirecting": "Redirecting to homepage in {seconds} seconds..."
+    },
+    "continue": "Continue",
+    "back": "Back",
+    "title": "Checkout",
+    "placeOrderSimplePay": "Place Order",
+    "placeOrder": "Place Order",
+    "processing": "Processing",
+    "successMessage": "Thank you for your order! We have sent a confirmation email to the provided address.",
+    "backToHome": "Back to Home",
+    "payment_error": "Payment error:",
+    "step1": {
+      "shipping": "Shipping",
+      "formTitle": "Shipping data"
+    },
+    "step2": {
+      "payment": "Payment",
+      "formTitle": "Choose Payment Method"
+    },
+    "step3": {
+      "summary": "Summary",
+      "formTitle": "Review and Pay"
+    },
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "addressTitle": "Shipping Address",
+      "zip": "Postal Code",
+      "city": "City",
+      "street": "Street",
+      "house_number": "House Number"
+    },
+    "payment": {
+      "simplepay": "SimplePay",
+      "instant": "Secure Payment",
+      "transfer": "Bank Transfer",
+      "delay": "Cash on Delivery",
+      "cash": "Cash",
+      "shipping": "Cash on Delivery",
+      "credit_card_stripe": "Credit Card Payment",
+      "place_order_button": "Place Order",
+      "processing": "Processing...",
+      "error_retry": "Try again"
+    },
+    "express": {
+      "quick_payment": "Quick and secure payment with Apple Pay, Google Pay",
+      "total_label": "Order total"
+    },
+    "summary": {
+      "shippingAddress": "Shipping Address",
+      "paymentMethod": "Payment Method",
+      "no_payment_selected": "No payment method selected",
+      "orderItems": "Items",
+      "quantity": "Quantity",
+      "change": "Change",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping Fee",
+      "free": "Free",
+      "total": "Total",
+      "acceptTerms": "I have read and accept the Terms and Conditions and the Withdrawal Policy."
+    },
+    "successTitle": "Thank you for your purchase!",
+    "finalize": {
+      "missing_key": "Error: Missing Stripe public key.",
+      "invalid_data": "Error: Missing or invalid payment information.",
+      "success_title": "Thank you for your purchase!",
+      "success_message": "Payment successful! Order has been finalized.",
+      "error_title": "Payment Error",
+      "error_message": "Error: Could not finalize the payment.",
+      "redirecting": "Redirecting to summary...",
+      "back_to_checkout": "Back to Checkout"
+    }
+  },
+  "profile": {
+    "account": "My Profile",
+    "data": "Profile Information",
+    "saveSuccess": "Profile data updated successfully",
+    "fullName": "Full Name",
+    "history": "Order History",
+    "orderHistory": {
+      "title": "Order History",
+      "order": "Order",
+      "date": "Date",
+      "products": "Products",
+      "quantity": "pcs",
+      "requestRefund": "Request Refund",
+      "refunding": "Refund in progress...",
+      "confirmRefund": "Are you sure you want to request a refund for this order?",
+      "error": "Error loading order. Please try again later.",
+      "noOrders": "You haven't placed any orders yet.",
+      "backToHome": "Start Shopping"
+    },
+    "wishlist": {
+      "title": "Wishlist",
+      "emptyTitle": "Your wishlist is empty.",
+      "toShop": "Back to Shop",
+      "clearButton": "Clear Wishlist",
+      "confirmClear": "Are you sure you want to clear your wishlist?"
+    },
+    "settings": {
+      "account": "User Account",
+      "title": "Settings",
+      "text": "Here you can manage your account settings and security options.",
+      "username": "Username",
+      "phone": "Phone Number",
+      "save": "Save Profile",
+      "cancel": "Cancel",
+      "edit": "Edit Data",
+      "email": {
+        "title": "Enable Email Notifications",
+        "text": "You will receive emails about changes in your order status."
+      },
+      "theme": {
+        "title": "System Theme",
+        "system": "System",
+        "dark": "Dark",
+        "light": "Light"
+      },
+      "password": "Change Password"
+    }
+  },
+  "viewCategory": "View Category"
+}

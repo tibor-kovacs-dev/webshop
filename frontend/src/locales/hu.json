@@ -1,0 +1,325 @@
+{
+  "currency": "HUF",
+  "currencySymbol": "Ft",
+  "common": {
+    "loading": "Betöltés",
+    "viewAll": "Még több ilyen termék",
+    "search": "Keresés",
+    "required_field": "Kötelező mező",
+    "invalid_email": "Érvénytelen e-mail cím",
+    "openMenu": "Menü megnyitása",
+    "closeMenu": "Menü bezárása",
+    "noProductsAvailable": "Jelenleg nincsenek elérhető termékek."
+  },
+  "newsletterSuccessMessage": "Sikeresen feliratkoztál a hírlevélre! Köszönjük.",
+  "banners": {
+    "slides": [
+      {
+        "title": "Téli Kollekció: -30%",
+        "subtitle": "Rendelje meg még ma, és spóroljon!"
+      },
+      {
+        "title": "Új Tech Érkezett!",
+        "subtitle": "Fedezze fel a legújabb kütyüket és innovációkat."
+      },
+      {
+        "title": "Hétvégi Akciók",
+        "subtitle": "Csak 48 óráig elérhető ajánlatok!"
+      }
+    ]
+  },
+  "shippingAbove20": "20.000 Ft felett Ingyenes szállítás!",
+  "breadcrumb": {
+    "home": "Kezdőlap",
+    "cart": "Kosár",
+    "checkout": "Pénztár",
+    "shipping": "Szállítási adatok",
+    "payment": "Fizetési mód",
+    "summary": "Összegzés",
+    "orderComplete": "Rendelés visszaigazolás",
+    "newArrivals": "Újdonságok",
+    "discounted": "Akciós termékek",
+    "profile": "Profilom",
+    "wishlist": "Kedvencek",
+    "login": "Bejelentkezés"
+  },
+  "category": "Nézd meg a kategóriát",
+  "cartButton": "Tekintse meg a kategóriát",
+  "categories": {
+    "mainTitle": "Kategóriák",
+    "Electronics": "Elektronika",
+    "Home Appliances": "Háztartási gépek",
+    "Furniture": "Bútorok",
+    "description": "Fedezze fel legújabb termékeinket"
+  },
+  "hero": {
+    "desktop_image": "/images/banner_hu_desktop.avif",
+    "mobile_image": "/images/banner_hu_mobile.avif",
+    "alt_text": "Webshop Akciós Banner"
+  },
+  "product": {
+    "newArrivals": "Új termékek",
+    "discountedOffers": "Akciós termékek",
+    "new": "ÚJ",
+    "newProductsTitle": "Új termékek",
+    "discountedProductsTitle": "Akciós termékek"
+  },
+  "shipping": "2-3 napon belüli kiszállítás",
+  "payWithCard": "Kártyás fizetési lehetőség",
+  "return": "14 napos visszaküldés",
+  "dontMiss": "Ne hagyj ki semmit!",
+  "subscribe": "Iratkozz fel, hogy további kedvezményeket kaphass!",
+  "subscribeButton": "Feliratkozom",
+  "firstName": "Keresztneved",
+  "lastName": "Vezetéktneved",
+  "email": "E-mail címed",
+  "quotes": {
+    "title": "Rólunk mondták",
+    "quote_1_text": "A rendelés hihetetlenül gyorsan megérkezett, és az áru minősége is első osztályú. Nagyon ajánlom!",
+    "quote_1_author": "Laura K.",
+    "quote_2_text": "Az ügyfélszolgálat nagyon segítőkész volt a méretkéréssel kapcsolatban. Elégedett vagyok a vásárlással, annak ellenére, hogy a szállítás egy nappal tovább tartott.",
+    "quote_2_author": "Max P.",
+    "quote_3_text": "Ez a legjobb online áruház, amit valaha használtam. Egyszerű rendelési folyamat és korrekt árak. Örömmel használnám újra!",
+    "quote_3_author": "Lena R."
+  },
+  "customerService": "Ügyfélszolgálat: H-P",
+  "info": "Információk",
+  "contact": "Kapcsolat",
+  "terms": "Általános szerződési feltételek",
+  "dataProcessingInfo": "Adatkezelési tájékoztató",
+  "shippingInfo": "Szállítási információk",
+  "withdrawal": "Elállás",
+  "shoppingTips": "Vásárlási tanácsok",
+  "sizeChart": "Mérettáblázat",
+  "brands": "Márkák",
+  "allRightsReserved": "Minden jog fenntartva",
+  "addToCart": "Kosárba",
+  "ratingCount": "értékelésből",
+  "notification": {
+    "addedToCart": "Kosárba téve!",
+    "productAdded": "hozzáadva. Jelenleg: {quantity} db",
+    "goToCart": "Kosár megtekintése",
+    "continueShopping": "Vásárlás folytatása",
+    "quantity": "db"
+  },
+  "comments": {
+    "writeComment": "Írj egy véleményt",
+    "reviewTitle": "Termék vélemények",
+    "commentPlaceholder": "Írd ide a véleményed...",
+    "submit": "Vélemény elküldése",
+    "anonymous": "Névtelen",
+    "noDate": "Ismeretlen dátum",
+    "loginRequired": "A vélemény írásához kérjük, jelentkezz be!",
+    "rating": "Értékelés",
+    "star": "csillag",
+    "submitting": "Küldés...",
+    "missingFields": "Kérlek, adj meg értékelést és szöveget is!",
+    "submitError": "Hiba történt a vélemény elküldésekor. Kérlek, próbáld újra.",
+    "fetchError": "Nem sikerült betölteni a véleményeket.",
+    "noReviews": "Még nincsenek vélemények ehhez a termékhez. Légy te az első!"
+  },
+  "cart": {
+    "title": "Kosaram",
+    "items_count": "termék",
+    "empty": "A kosarad üres",
+    "quantity": "Mennyiség",
+    "price": "Ár",
+    "remove": "Eltávolítás",
+    "emptying": "Kosár ürítése",
+    "total": "Összesen",
+    "toPayment": "Tovább a pénztárhoz",
+    "summary": "Összegzés",
+    "subtotal": "Összeg",
+    "shipping": "Szállítás",
+    "free": "Ingyenes",
+    "browse_products": "Vásárlás folytatása"
+  },
+  "login": {
+    "username": "Felhasználónév",
+    "password": "Jelszó",
+    "submit": "Bejelentkezés",
+    "loggingIn": "Bejelentkezés folyamatban"
+  },
+  "auth": {
+    "loginTitle": "Bejelentkezés",
+    "loginSubtitle": "Üdvözöljük újra! Kérjük, jelentkezzen be.",
+    "registerTitle": "Regisztráció",
+    "registerSubtitle": "Hozzon létre új fiókot.",
+    "firstName": "Keresztnév",
+    "firstNamePlaceholder": "Példa",
+    "lastName": "Vezetéknév",
+    "lastNamePlaceholder": "Kovács",
+    "email": "E-mail cím",
+    "emailPlaceholder": "pelda@email.hu",
+    "password": "Jelszó",
+    "passwordPlaceholder": "Minimum 8 karakter",
+    "passwordConfirm": "Jelszó megerősítése",
+    "passwordConfirmPlaceholder": "Adja meg újra a jelszót",
+    "loginButton": "Bejelentkezés",
+    "registerButton": "Regisztráció",
+    "loggingIn": "Bejelentkezés...",
+    "registering": "Regisztráció...",
+    "errorOccurred": "Hiba történt!",
+    "success": "Siker!",
+    "noAccount": "Nincs még fiókod?",
+    "hasAccount": "Van már fiókod?",
+    "switchToRegister": "Regisztrálok",
+    "switchToLogin": "Belépek",
+    "forgotPassword": "Elfelejtett jelszó?",
+    "resendVerification": "Megerősítő e-mail újraküldése",
+    "resendSuccess": "A megerősítő e-mailt sikeresen elküldtük. Ellenőrizze a beérkező leveleit.",
+    "resendError": "Hiba az e-mail újraküldésekor: ",
+    "registerSuccessMessage": "Sikeres regisztráció! Kérjük, ellenőrizd az e-mail fiókodat a megerősítő linkért.",
+    "registerSuccessWithVerification": "Sikeres regisztráció! Hamarosan kapsz egy e-mailt a fiókod aktiválásához.",
+    "registerFailed": "Hiba történt a regisztráció során. Kérjük, próbáld újra később.",
+    "registerUnexpectedError": "Ismeretlen hiba történt a regisztráció során.",
+    "forgotPasswordTitle": "Elfelejtetted a jelszavad?",
+    "sendResetLink": "Küldés",
+    "sending": "Küldés folyamatban...",
+    "backToLogin": "Vissza a bejelentkezéshez"
+  },
+  "emailVerified": {
+    "successTitle": "E-mail megerősítve!",
+    "successMessage": "Sikeresen megerősítetted az e-mail címedet. Most már bejelentkezhetsz.",
+    "alreadyTitle": "Már meg volt erősítve!",
+    "alreadyMessage": "Ez az e-mail cím már korábban meg lett erősítve. Kérjük, jelentkezzen be.",
+    "errorTitle": "Hiba a megerősítés során!",
+    "errorMessage": "A megerősítő link érvénytelen vagy lejárt. Kérjük, próbálja meg újra a bejelentkezést, vagy kérjen új megerősítő e-mailt.",
+    "goToLogin": "Tovább a Bejelentkezéshez"
+  },
+  "checkout": {
+    "shippingDetails": {
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "email": "E-mail cím",
+      "house_number": "Házszám"
+    },
+    "complete": {
+      "checkingStatus": "Fizetés ellenőrzése...",
+      "orderSuccess": "Rendelésed sikeresen feldolgoztuk!",
+      "paymentFailed": "Hiba történt a fizetéskor",
+      "paymentNotConfirmed": "Nem sikerült visszaigazolni a fizetést.",
+      "redirecting": "Automatikus átirányítás a főoldalra {seconds} másodperc múlva..."
+    },
+    "continue": "Tovább",
+    "back": "Vissza",
+    "title": "Pénztár",
+    "placeOrderSimplePay": "Megrendelés",
+    "placeOrder": "Rendelés leadása",
+    "processing": "Feldolgozás",
+    "successMessage": "Köszönjük a rendelést! Az összesítő e-mailt elküldtük a megadott e-mail címre.",
+    "backToHome": "Vissza a főoldalra",
+    "payment_error": "Fizetési hiba:",
+    "step1": {
+      "shipping": "Szállítás",
+      "formTitle": "Szállítási adatok"
+    },
+    "step2": {
+      "payment": "Fizetés",
+      "formTitle": "Fizetési mód kiválasztása"
+    },
+    "step3": {
+      "summary": "Összefoglalás",
+      "formTitle": "Ellenőrzés és Fizetés"
+    },
+    "form": {
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "email": "E-mail cím",
+      "addressTitle": "Szállítási cím",
+      "zip": "Irányítószám",
+      "city": "Város",
+      "street": "Utca",
+      "house_number": "Házszám"
+    },
+    "payment": {
+      "simplepay": "SimplePay",
+      "instant": "Biztonságos fizetés",
+      "transfer": "Banki átutalás",
+      "delay": "Utánvét",
+      "cash": "Készpénz",
+      "shipping": "Utánvét",
+      "credit_card_stripe": "Bankkártyás fizetés",
+      "place_order_button": "Rendelés leadása",
+      "processing": "Feldolgozás alatt...",
+      "error_retry": "Próbálja meg újra"
+    },
+    "express": {
+      "quick_payment": "Gyors és biztonságos fizetés Apple Pay, Google Pay segítségével",
+      "total_label": "Rendelés összesen"
+    },
+    "summary": {
+      "shippingAddress": "Szállítási cím",
+      "paymentMethod": "Fizetési mód",
+      "no_payment_selected": "Nincs kiválasztva",
+      "orderItems": "Termékek",
+      "quantity": "Mennyiség",
+      "change": "Módosítás",
+      "subtotal": "Egységár",
+      "shipping": "Szállítási díj",
+      "free": "Ingyenes",
+      "total": "Végösszeg",
+      "acceptTerms": "Elolvastam az ÁSZF-et és az Elállási tájékoztatót, és elfogadom azokat."
+    },
+    "successTitle": "Köszönjük a vásárlást!",
+    "finalize": {
+      "missing_key": "Hiba: Hiányzik a Stripe nyilvános kulcs.",
+      "invalid_data": "Hiba: Hiányzó vagy érvénytelen fizetési információ.",
+      "success_title": "Köszönjük a vásárlást!",
+      "success_message": "Fizetés sikeres! A megrendelés véglegesítve.",
+      "error_title": "Fizetési hiba",
+      "error_message": "Hiba: Nem sikerült véglegesíteni a fizetést.",
+      "redirecting": "Átirányítás az összefoglalóhoz...",
+      "back_to_checkout": "Vissza a pénztárhoz"
+    }
+  },
+  "profile": {
+    "account": "Profilom",
+    "data": "Profil Alapadatok",
+    "saveSuccess": "A profiladatok sikeresen módosítva",
+    "fullName": "Teljes Név",
+    "history": "Rendelési előzmények",
+    "orderHistory": {
+      "title": "Rendelési előzmények",
+      "order": "Rendelés",
+      "date": "Dátum",
+      "products": "Termékek",
+      "quantity": "db",
+      "requestRefund": "Visszatérítés kérése",
+      "refunding": "Visszatérítés folyamatban...",
+      "confirmRefund": "Biztosan visszatérítést kér a rendelésre?",
+      "error": "Hiba történt a rendelés betöltésekor. Kérjük, próbálja újra később.",
+      "noOrders": "Még nem rendeltél tőlünk semmit.",
+      "backToHome": "Kezdj el vásárolni"
+    },
+    "wishlist": {
+      "title": "Kívánságlista",
+      "emptyTitle": "A kívánságlista üres.",
+      "toShop": "Vissza a főoldalra",
+      "clearButton": "Lista ürítése",
+      "confirmClear": "Biztosan ki akarod üríteni a kívánságlistát?"
+    },
+    "settings": {
+      "account": "Felhasználói fiók",
+      "title": "Beállítások",
+      "text": "Itt állíthatja be a fiókjához tartozó beállításokat és biztonsági opciókat.",
+      "username": "Felhasználónév",
+      "phone": "Telefonszám",
+      "save": "Profil mentése",
+      "cancel": "Mégse",
+      "edit": "Adatok szerkesztése",
+      "email": {
+        "title": "E-mail értesítések engedélyezése",
+        "text": "E-mailt fog kapni a rendelés állapotában bekövetkezett változásokról."
+      },
+      "theme": {
+        "title": "Rendszer Témája",
+        "system": "Rendszer",
+        "dark": "Sötét",
+        "light": "Világos"
+      },
+      "password": "Jelszó megváltoztatása"
+    }
+  },
+  "viewCategory": "Kategória megtekintése"
+}

@@ -1,0 +1,54 @@
+{
+    "mail.currency": "Ft",
+    "mail.closing": "Üdvözlettel",
+    "mail.team_name": "Az Ön :app_name csapata",
+    "mail.financial_team": "Az :app_name Pénzügyi Osztálya",
+    
+    "mail.received.title": "Köszönjük a rendelését!",
+    "mail.received.greeting": "Sikeresen fogadtuk rendelését. A fizetés feldolgozásra került, és a rendelése most előkészítés alatt áll.",
+    "mail.received.order_id": "Rendelési szám",
+    "mail.received.account_link": "Ez a rendelés a regisztrált fiókjához lett rendelve.",
+    "mail.received.footer_note": "Amint elindítjuk a csomagját, egy külön értesítést fog kapni a szállítási részletekkel.",
+    
+    "mail.summary.title": "Rendelés összefoglaló",
+    "mail.summary.date": "Rendelés dátuma",
+    "mail.summary.payment_method": "Fizetési mód",
+    "mail.summary.paid": "Kifizetve",
+    
+    "mail.items.title": "Rendelési tételek",
+    "mail.items.product_name": "Termék neve",
+    "mail.items.quantity": "Mennyiség",
+    "mail.items.unit_price": "Egységár",
+    "mail.items.total": "Összesen",
+    "mail.items.shipping_fee": "Szállítási díj",
+    "mail.items.grand_total": "Teljes összeg",
+    "mail.items.price_vat": "Ár (Áfával)",
+    "mail.items.due_total": "Fizetendő végösszeg",
+
+    "mail.button.track_order": "Rendelés követése",
+    
+    "mail.invoice.title": "Számla a rendeléséről",
+    "mail.invoice.greeting": "Mellékelten küldjük a számlát/előszámlát a **#:order_id** rendelésszámú megrendeléséről.",
+    "mail.invoice.account_owner": "Fiók tulajdonosa",
+    "mail.invoice.note_label": "Megjegyzés",
+    "mail.invoice.note_content": "Kérjük, őrizze meg ezt az e-mailt a nyilvántartása számára. Számlázással kapcsolatos kérdések esetén forduljon ügyfélszolgálatunkhoz.",
+
+    "mail.billing.title": "Számlázási adatok",
+    "mail.billing.name": "Név",
+    "mail.billing.address": "Cím",
+    "mail.billing.tax_id": "Adószám",
+    "mail.billing.not_provided": "Nincs megadva",
+
+    "mail.payment_info.title": "Fizetési információk",
+    "mail.payment_info.transaction_id": "Tranzakció azonosító",
+    "mail.payment_info.status": "Fizetés állapota",
+    "mail.payment_info.paid_status": "SIKERESEN KIFIZETVE",
+    "mail.payment_info.total": "Végösszeg",
+    
+    "mail.failed.title": "Fizetési hiba a rendelésénél",
+    "mail.failed.greeting": "Sajnálattal értesítjük, hogy a **#:order_id** rendelésszámú megrendelésére vonatkozó fizetési kísérlete **sikertelen** volt.",
+    "mail.failed.reason": "Ez a hiba leggyakrabban a kártyakibocsátó által visszautasított 3D Secure hitelesítés miatt fordul elő.",
+    "mail.failed.next_steps": "Következő lépések",
+    "mail.failed.retry_instruction": "Kérjük, próbálja meg újra a fizetést az alábbi linkre kattintva. Győződjön meg róla, hogy a kártya adatai helyesek, és erősítse meg a tranzakciót a 3D Secure ellenőrzés során.",
+    "mail.button.retry_payment": "Fizetés újrapróbálása"
+}

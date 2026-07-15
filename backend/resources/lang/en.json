@@ -1,0 +1,54 @@
+{
+    "mail.currency": "€",
+    "mail.closing": "Sincerely",
+    "mail.team_name": "Your :app_name Team",
+    "mail.financial_team": "The Finance Department of :app_name",
+    
+    "mail.received.title": "Thank you for your order!",
+    "mail.received.greeting": "We have successfully received your order. The payment has been processed and your order is now being prepared.",
+    "mail.received.order_id": "Order Number",
+    "mail.received.account_link": "This order has been linked to your registered account.",
+    "mail.received.footer_note": "Once your order has shipped, you will receive a separate notification with the shipping details.",
+    
+    "mail.summary.title": "Order Summary",
+    "mail.summary.date": "Order Date",
+    "mail.summary.payment_method": "Payment Method",
+    "mail.summary.paid": "Paid",
+    
+    "mail.items.title": "Order Items",
+    "mail.items.product_name": "Product Name",
+    "mail.items.quantity": "Quantity",
+    "mail.items.unit_price": "Unit Price",
+    "mail.items.total": "Total",
+    "mail.items.shipping_fee": "Shipping Fee",
+    "mail.items.grand_total": "Grand Total",
+    "mail.items.price_vat": "Price (Incl. VAT)",
+    "mail.items.due_total": "Total Amount Due",
+
+    "mail.button.track_order": "Track Order",
+    
+    "mail.invoice.title": "Invoice for Your Order",
+    "mail.invoice.greeting": "Please find attached the invoice/proforma invoice for your order with number **#:order_id**.",
+    "mail.invoice.account_owner": "Account Owner",
+    "mail.invoice.note_label": "Note",
+    "mail.invoice.note_content": "Please keep this email for your records. For questions regarding this invoice, please contact our customer service.",
+
+    "mail.billing.title": "Billing Details",
+    "mail.billing.name": "Name",
+    "mail.billing.address": "Address",
+    "mail.billing.tax_id": "Tax ID",
+    "mail.billing.not_provided": "Not Provided",
+
+    "mail.payment_info.title": "Payment Information",
+    "mail.payment_info.transaction_id": "Transaction ID",
+    "mail.payment_info.status": "Payment Status",
+    "mail.payment_info.paid_status": "SUCCESSFULLY PAID",
+    "mail.payment_info.total": "Total Amount",
+    
+    "mail.failed.title": "Payment Failure for Your Order",
+    "mail.failed.greeting": "We regret to inform you that your payment attempt for order number **#:order_id** has **failed**.",
+    "mail.failed.reason": "This error most commonly occurs due to a 3D Secure authentication rejection by the card issuer.",
+    "mail.failed.next_steps": "Next Steps",
+    "mail.failed.retry_instruction": "Please attempt the payment again by clicking the link below. Ensure your card details are correct and confirm the transaction during the 3D Secure verification.",
+    "mail.button.retry_payment": "Retry Payment"
+}

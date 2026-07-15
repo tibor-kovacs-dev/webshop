@@ -1,0 +1,55 @@
+{
+    "mail.currency": "€",
+    "mail.closing": "Mit freundlichen Grüßen",
+    "mail.team_name": "Ihr :app_name Team",
+    "mail.financial_team": "Die Finanzabteilung von :app_name",
+    
+    "mail.received.title": "Vielen Dank für Ihre Bestellung!",
+    "mail.received.greeting": "Wir haben Ihre Bestellung erfolgreich erhalten. Die Zahlung wurde verarbeitet und Ihre Bestellung wird nun vorbereitet.",
+    "mail.received.order_id": "Bestellnummer",
+    "mail.received.account_link": "Diese Bestellung wurde Ihrem registrierten Konto zugeordnet.",
+    "mail.received.footer_note": "Sobald Ihre Bestellung versandt wurde, erhalten Sie eine gesonderte Benachrichtigung mit den Versanddetails.",
+    
+    "mail.summary.title": "Bestellübersicht",
+    "mail.summary.date": "Bestelldatum",
+    "mail.summary.payment_method": "Zahlungsmethode",
+    "mail.summary.paid": "Bezahlt",
+    
+    "mail.items.title": "Bestellpositionen",
+    "mail.items.product_name": "Produktname",
+    "mail.items.quantity": "Menge",
+    "mail.items.unit_price": "Stückpreis",
+    "mail.items.total": "Gesamt",
+    "mail.items.shipping_fee": "Versandkosten",
+    "mail.items.grand_total": "Endbetrag",
+    "mail.items.price_vat": "Preis (inkl. MwSt.)",
+    "mail.items.due_total": "Gesamtbetrag fällig",
+
+    "mail.button.track_order": "Bestellung verfolgen",
+    
+    "mail.invoice.title": "Rechnung für Ihre Bestellung",
+    "mail.invoice.greeting": "Anbei senden wir Ihnen die Rechnung/Proformarechnung für Ihre Bestellung mit der Nummer **#:order_id**.",
+    "mail.invoice.account_owner": "Kontoinhaber",
+    "mail.invoice.note_label": "Hinweis",
+    "mail.invoice.note_content": "Bitte bewahren Sie diese E-Mail für Ihre Unterlagen auf. Bei Fragen zur Rechnung wenden Sie sich bitte an unseren Kundenservice.",
+
+    "mail.billing.title": "Rechnungsdetails",
+    "mail.billing.name": "Name",
+    "mail.billing.address": "Adresse",
+    "mail.billing.tax_id": "Steuernummer",
+    "mail.billing.not_provided": "Nicht angegeben",
+
+    "mail.payment_info.title": "Zahlungsinformationen",
+    "mail.payment_info.transaction_id": "Transaktions-ID",
+    "mail.payment_info.status": "Zahlungsstatus",
+    "mail.payment_info.paid_status": "ERFOLGREICH BEZAHLT",
+    "mail.payment_info.total": "Endbetrag",
+    
+    "mail.failed.title": "Zahlungsfehler bei Ihrer Bestellung",
+    "mail.failed.subject": "Zahlungsfehler bei Bestellung #:order_id",
+    "mail.failed.greeting": "Wir bedauern, Ihnen mitteilen zu müssen, dass Ihr Zahlungsversuch für die Bestellung mit der Nummer **#:order_id** **fehlgeschlagen** ist.",
+    "mail.failed.reason": "Dieser Fehler tritt am häufigsten aufgrund einer vom Kartenaussteller abgelehnten 3D Secure Authentifizierung auf.",
+    "mail.failed.next_steps": "Nächste Schritte",
+    "mail.failed.retry_instruction": "Bitte versuchen Sie die Zahlung erneut, indem Sie auf den folgenden Link klicken. Stellen Sie sicher, dass Ihre Kartendaten korrekt sind und bestätigen Sie die Transaktion bei der 3D Secure Überprüfung.",
+    "mail.button.retry_payment": "Zahlung erneut versuchen"
+}

@@ -1,0 +1,325 @@
+{
+  "currency": "EUR",
+  "currencySymbol": "€",
+  "common": {
+    "loading": "Wird geladen",
+    "viewAll": "Mehr Produkte ansehen",
+    "search": "Suchen",
+    "required_field": "Dieses Feld ist erforderlich",
+    "invalid_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "noProductsAvailable": "Derzeit sind keine Produkte verfügbar."
+  },
+  "newsletterSuccessMessage": "Sie haben sich erfolgreich für unseren Newsletter angemeldet! Vielen Dank.",
+  "banners": {
+    "slides": [
+      {
+        "title": "Winterkollektion: -30%",
+        "subtitle": "Bestellen Sie heute und sparen Sie!"
+      },
+      {
+        "title": "Neue Technik ist da!",
+        "subtitle": "Entdecken Sie die neuesten Gadgets und Innovationen."
+      },
+      {
+        "title": "Wochenend-Angebote",
+        "subtitle": "Nur 48 Stunden gültig!"
+      }
+    ]
+  },
+  "shippingAbove20": "Kostenlose Lieferung ab 190 €!",
+  "breadcrumb": {
+    "home": "Startseite",
+    "cart": "Warenkorb",
+    "checkout": "Kasse",
+    "shipping": "Versandadresse",
+    "payment": "Zahlungsart",
+    "summary": "Zusammenfassung",
+    "orderComplete": "Bestellbestätigung",
+    "newArrivals": "Neuheiten",
+    "discounted": "Angebote",
+    "profile": "Mein Profil",
+    "wishlist": "Wunschliste",
+    "login": "Anmelden"
+  },
+  "category": "Kategorie ansehen",
+  "cartButton": "Kategorie ansehen",
+  "categories": {
+    "mainTitle": "Kategorien",
+    "Electronics": "Elektronik",
+    "Home Appliances": "Haushaltsgeräte",
+    "Furniture": "Möbel",
+    "description": "Entdecken Sie unsere neuesten Produkte"
+  },
+  "hero": {
+    "desktop_image": "/images/banner_de_desktop.avif",
+    "mobile_image": "/images/banner_de_mobile.avif",
+    "alt_text": "Webshop Aktionsbanner"
+  },
+  "product": {
+    "newArrivals": "Neue Produkte",
+    "discountedOffers": "Angebote",
+    "new": "NEU",
+    "newProductsTitle": "Neuheiten",
+    "discountedProductsTitle": "Aktionsprodukte"
+  },
+  "shipping": "Lieferung in 2-3 Tagen",
+  "payWithCard": "Zahlung mit Karte",
+  "return": "14-tägiges Rückgaberecht",
+  "dontMiss": "Verpassen Sie nichts!",
+  "subscribe": "Abonnieren Sie für weitere Rabatte!",
+  "subscribeButton": "Abonnieren",
+  "firstName": "Vorname",
+  "lastName": "Nachname",
+  "email": "E-Mail-Adresse",
+  "quotes": {
+    "title": "Was unsere Kunden sagen",
+    "quote_1_text": "Die Bestellung ist unglaublich schnell angekommen und die Qualität ist erstklassig. Sehr zu empfehlen!",
+    "quote_1_author": "Laura K.",
+    "quote_2_text": "Der Kundenservice war sehr hilfsbereit bei der Größenfrage. Ich bin mit dem Kauf zufrieden, auch wenn die Lieferung einen Tag länger gedauert hat.",
+    "quote_2_author": "Max P.",
+    "quote_3_text": "Dies ist der beste Online-Shop, den ich je benutzt habe. Einfacher Bestellvorgang und faire Preise. Gerne wieder!",
+    "quote_3_author": "Lena R."
+  },
+  "customerService": "Kundenservice: Mo-Fr",
+  "info": "Informationen",
+  "contact": "Kontakt",
+  "terms": "Allgemeine Geschäftsbedingungen",
+  "dataProcessingInfo": "Datenschutzerklärung",
+  "shippingInfo": "Versandinformationen",
+  "withdrawal": "Widerrufsrecht",
+  "shoppingTips": "Einkaufstipps",
+  "sizeChart": "Größentabelle",
+  "brands": "Marken",
+  "allRightsReserved": "Alle Rechte vorbehalten",
+  "addToCart": "In den Warenkorb",
+  "ratingCount": "Bewertungen",
+  "notification": {
+    "addedToCart": "In den Warenkorb gelegt!",
+    "productAdded": "hinzugefügt. Aktuell: {quantity} Stk.",
+    "goToCart": "Warenkorb ansehen",
+    "continueShopping": "Weiter einkaufen",
+    "quantity": "Stk."
+  },
+  "comments": {
+    "writeComment": "Schreiben Sie eine Bewertung",
+    "reviewTitle": "Produktbewertungen",
+    "commentPlaceholder": "Schreiben Sie Ihre Bewertung hier...",
+    "submit": "Bewertung absenden",
+    "anonymous": "Anonym",
+    "noDate": "Unbekanntes Datum",
+    "loginRequired": "Bitte melden Sie sich an, um eine Bewertung zu schreiben!",
+    "rating": "Bewertung",
+    "star": "Stern",
+    "submitting": "Wird gesendet...",
+    "missingFields": "Bitte geben Sie eine Bewertung und Text ein!",
+    "submitError": "Fehler beim Senden der Bewertung. Bitte versuchen Sie es erneut.",
+    "fetchError": "Bewertungen konnten nicht geladen werden.",
+    "noReviews": "Noch keine Bewertungen für dieses Produkt. Seien Sie der Erste!"
+  },
+  "cart": {
+    "title": "Mein Warenkorb",
+    "items_count": "Artikel",
+    "empty": "Ihr Warenkorb ist leer",
+    "quantity": "Menge",
+    "price": "Preis",
+    "remove": "Entfernen",
+    "emptying": "Warenkorb leeren",
+    "total": "Gesamt",
+    "toPayment": "Zur Kasse",
+    "summary": "Zusammenfassung",
+    "subtotal": "Zwischensumme",
+    "shipping": "Versand",
+    "free": "Kostenlos",
+    "browse_products": "Weiter einkaufen"
+  },
+  "login": {
+    "username": "Benutzername",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "loggingIn": "Anmeldung läuft"
+  },
+  "auth": {
+    "loginTitle": "Anmelden",
+    "loginSubtitle": "Willkommen zurück! Bitte melden Sie sich an.",
+    "registerTitle": "Registrieren",
+    "registerSubtitle": "Erstellen Sie ein neues Konto.",
+    "firstName": "Vorname",
+    "firstNamePlaceholder": "Max",
+    "lastName": "Nachname",
+    "lastNamePlaceholder": "Mustermann",
+    "email": "E-Mail-Adresse",
+    "emailPlaceholder": "beispiel@email.de",
+    "password": "Passwort",
+    "passwordPlaceholder": "Mindestens 8 Zeichen",
+    "passwordConfirm": "Passwort bestätigen",
+    "passwordConfirmPlaceholder": "Passwort erneut eingeben",
+    "loginButton": "Anmelden",
+    "registerButton": "Registrieren",
+    "loggingIn": "Anmeldung...",
+    "registering": "Registrierung...",
+    "errorOccurred": "Ein Fehler ist aufgetreten!",
+    "success": "Erfolg!",
+    "noAccount": "Noch kein Konto?",
+    "hasAccount": "Bereits registriert?",
+    "switchToRegister": "Registrieren",
+    "switchToLogin": "Anmelden",
+    "forgotPassword": "Passwort vergessen?",
+    "resendVerification": "Bestätigungs-E-Mail erneut senden",
+    "resendSuccess": "Bestätigungs-E-Mail erfolgreich gesendet. Bitte prüfen Sie Ihren Posteingang.",
+    "resendError": "Fehler beim Senden der E-Mail: ",
+    "registerSuccessMessage": "Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails für den Bestätigungslink.",
+    "registerSuccessWithVerification": "Registrierung erfolgreich! Sie erhalten in Kürze eine E-Mail zur Aktivierung Ihres Kontos.",
+    "registerFailed": "Fehler bei der Registrierung. Bitte versuchen Sie es später erneut.",
+    "registerUnexpectedError": "Ein unerwarteter Fehler ist bei der Registrierung aufgetreten.",
+    "forgotPasswordTitle": "Passwort vergessen?",
+    "sendResetLink": "Link senden",
+    "sending": "Wird gesendet...",
+    "backToLogin": "Zurück zur Anmeldung"
+  },
+  "emailVerified": {
+    "successTitle": "E-Mail bestätigt!",
+    "successMessage": "Sie haben Ihre E-Mail-Adresse erfolgreich bestätigt. Sie können sich jetzt anmelden.",
+    "alreadyTitle": "Bereits bestätigt!",
+    "alreadyMessage": "Diese E-Mail-Adresse wurde bereits bestätigt. Bitte melden Sie sich an.",
+    "errorTitle": "Fehler bei der Bestätigung!",
+    "errorMessage": "Der Bestätigungslink ist ungültig oder abgelaufen. Bitte versuchen Sie es erneut oder fordern Sie eine neue E-Mail an.",
+    "goToLogin": "Zur Anmeldung"
+  },
+  "checkout": {
+    "shippingDetails": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail-Adresse",
+      "house_number": "Hausnummer"
+    },
+    "complete": {
+      "checkingStatus": "Zahlungsstatus wird überprüft...",
+      "orderSuccess": "Ihre Bestellung wurde erfolgreich bearbeitet!",
+      "paymentFailed": "Zahlungsfehler",
+      "paymentNotConfirmed": "Wir konnten Ihre Zahlung nicht bestätigen.",
+      "redirecting": "Weiterleitung zur Startseite in {seconds} Sekunden..."
+    },
+    "continue": "Weiter",
+    "back": "Zurück",
+    "title": "Kasse",
+    "placeOrderSimplePay": "Bestellung abschließen",
+    "placeOrder": "Bestellung aufgeben",
+    "processing": "Wird bearbeitet",
+    "successMessage": "Vielen Dank für Ihre Bestellung! Wir haben eine Bestätigungs-E-Mail an die angegebene Adresse gesendet.",
+    "backToHome": "Zurück zur Startseite",
+    "payment_error": "Zahlungsfehler:",
+    "step1": {
+      "shipping": "Versand",
+      "formTitle": "Versanddaten"
+    },
+    "step2": {
+      "payment": "Zahlung",
+      "formTitle": "Zahlungsart auswählen"
+    },
+    "step3": {
+      "summary": "Zusammenfassung",
+      "formTitle": "Überprüfen und bezahlen"
+    },
+    "form": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail-Adresse",
+      "addressTitle": "Lieferadresse",
+      "zip": "PLZ",
+      "city": "Stadt",
+      "street": "Straße",
+      "house_number": "Hausnummer"
+    },
+    "payment": {
+      "simplepay": "SimplePay",
+      "instant": "Sichere Zahlung",
+      "transfer": "Banküberweisung",
+      "delay": "Nachnahme",
+      "cash": "Barzahlung",
+      "shipping": "Nachnahme",
+      "credit_card_stripe": "Kreditkartenzahlung",
+      "place_order_button": "Bestellung aufgeben",
+      "processing": "Wird bearbeitet...",
+      "error_retry": "Erneut versuchen"
+    },
+    "express": {
+      "quick_payment": "Schnelle und sichere Zahlung mit Apple Pay und Google Pay",
+      "total_label": "Bestellsumme"
+    },
+    "summary": {
+      "shippingAddress": "Lieferadresse",
+      "paymentMethod": "Zahlungsart",
+      "no_payment_selected": "Keine Zahlungsart ausgewählt",
+      "orderItems": "Produkte",
+      "quantity": "Menge",
+      "change": "Ändern",
+      "subtotal": "Zwischensumme",
+      "shipping": "Versandkosten",
+      "free": "Kostenlos",
+      "total": "Gesamtbetrag",
+      "acceptTerms": "Ich habe die AGB und die Widerrufsbelehrung gelesen und akzeptiere sie."
+    },
+    "successTitle": "Vielen Dank für Ihren Einkauf!",
+    "finalize": {
+      "missing_key": "Fehler: Stripe Public Key fehlt.",
+      "invalid_data": "Fehler: Fehlende oder ungültige Zahlungsinformationen.",
+      "success_title": "Vielen Dank für Ihren Einkauf!",
+      "success_message": "Zahlung erfolgreich! Die Bestellung wurde abgeschlossen.",
+      "error_title": "Zahlungsfehler",
+      "error_message": "Fehler: Die Zahlung konnte nicht abgeschlossen werden.",
+      "redirecting": "Weiterleitung zur Zusammenfassung...",
+      "back_to_checkout": "Zurück zur Kasse"
+    }
+  },
+  "profile": {
+    "account": "Mein Profil",
+    "data": "Profilinformationen",
+    "saveSuccess": "Profildaten erfolgreich aktualisiert",
+    "fullName": "Vollständiger Name",
+    "history": "Bestellverlauf",
+    "orderHistory": {
+      "title": "Bestellhistorie",
+      "order": "Bestellung",
+      "date": "Datum",
+      "products": "Produkte",
+      "quantity": "Stk.",
+      "requestRefund": "Rückerstattung beantragen",
+      "refunding": "Rückerstattung wird bearbeitet...",
+      "confirmRefund": "Möchten Sie wirklich eine Rückerstattung für diese Bestellung beantragen?",
+      "error": "Fehler beim Laden der Bestellung. Bitte versuchen Sie es später erneut.",
+      "noOrders": "Sie haben noch keine Bestellungen aufgegeben.",
+      "backToHome": "Jetzt einkaufen"
+    },
+    "wishlist": {
+      "title": "Wunschliste",
+      "emptyTitle": "Ihre Wunschliste ist leer.",
+      "toShop": "Zurück zum Shop",
+      "clearButton": "Wunschliste leeren",
+      "confirmClear": "Möchten Sie Ihre Wunschliste wirklich leeren?"
+    },
+    "settings": {
+      "account": "Benutzerkonto",
+      "title": "Einstellungen",
+      "text": "Hier können Sie Ihre Kontoeinstellungen und Sicherheitsoptionen verwalten.",
+      "username": "Benutzername",
+      "phone": "Telefonnummer",
+      "save": "Profil speichern",
+      "cancel": "Abbrechen",
+      "edit": "Daten bearbeiten",
+      "email": {
+        "title": "E-Mail-Benachrichtigungen aktivieren",
+        "text": "Sie erhalten E-Mails über Änderungen im Status Ihrer Bestellung."
+      },
+      "theme": {
+        "title": "System-Design",
+        "system": "System",
+        "dark": "Dunkel",
+        "light": "Hell"
+      },
+      "password": "Passwort ändern"
+    }
+  },
+  "viewCategory": "Kategorie ansehen"
+}
