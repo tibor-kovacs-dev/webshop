@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import CartNotification from '@/components/CartNotification.vue'
 import { useCartStore } from '@/stores/cartStore'
 
+// i18n és RouterLink mockolása
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key: string) => key,
@@ -29,7 +30,16 @@ describe('CartNotification.vue', () => {
           RouterLink: true 
         },
         mocks: {
-          $t: (key: string) => key 
+          $t: (key: string) => {
+            const translations: Record<string, string> = {
+              'notification.addedToCart': 'Kosárba téve!',
+              'notification.close': 'Bezárás',
+              'notification.quantity': 'db',
+              'notification.continueShopping': 'Vásárlás folytatása',
+              'notification.goToCart': 'Kosár megtekintése',
+            }
+            return translations[key] ?? key
+          }
         }
       }
     })
