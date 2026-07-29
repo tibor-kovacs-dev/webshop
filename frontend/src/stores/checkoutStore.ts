@@ -50,7 +50,6 @@ export const useCheckoutStore = defineStore(
     const currentOrderId = ref<number | string | null>(null)
     const paymentError = ref<string | null>(null)
 
-    // === FX Quote támogatás ===
     const fxQuoteId = ref<string | null>(null)
 
     const discountedTotal = computed((): number => {
@@ -58,8 +57,8 @@ export const useCheckoutStore = defineStore(
         let price = Number(item.price || 0)
         const discount = Number(item.discount || 0)
 
-        let effectivePrice = discount > 0 
-          ? price * (1 - discount / 100) 
+        let effectivePrice = discount > 0
+          ? price * (1 - discount / 100)
           : price
 
         effectivePrice = convertPrice(effectivePrice)
@@ -85,7 +84,7 @@ export const useCheckoutStore = defineStore(
 
     async function getFxQuote(): Promise<string | null> {
       const currency = getCurrentCurrency().toUpperCase()
-      
+
       if (currency === 'HUF') {
         fxQuoteId.value = null
         return null
@@ -93,9 +92,9 @@ export const useCheckoutStore = defineStore(
 
       try {
         const response = await axios.post(`${API_URL}/api/fx-quote`, {
-          to_currency: 'HUF',                   
+          to_currency: 'HUF',
           from_currencies: [currency],
-          lock_duration: 'hour'                  
+          lock_duration: 'hour',
         })
 
         fxQuoteId.value = response.data.id
@@ -122,7 +121,7 @@ export const useCheckoutStore = defineStore(
       let amountToCharge = discountedTotal.value
 
       if (currency === 'huf') {
-        amountToCharge = Math.max(175, Math.round(amountToCharge)) 
+        amountToCharge = Math.max(175, Math.round(amountToCharge))
       } else {
         amountToCharge = Math.round(amountToCharge * 100)
       }
@@ -145,7 +144,7 @@ export const useCheckoutStore = defineStore(
 
         const intentResponse = await axios.post(
           `${API_URL}/api/checkout/create-intent`,
-          payload
+          payload,
         )
 
         paymentIntentClientSecret.value = intentResponse.data.client_secret
@@ -153,7 +152,8 @@ export const useCheckoutStore = defineStore(
       } catch (error: any) {
         console.error('Payment Intent hiba:', error.response?.data || error.message)
         paymentIntentClientSecret.value = null
-        paymentError.value = error.response?.data?.error || 'Hiba a kártyás fizetés előkészítésekor.'
+        paymentError.value =
+          error.response?.data?.error || 'Hiba a kártyás fizetés előkészítésekor.'
         return false
       }
     }
@@ -206,7 +206,8 @@ export const useCheckoutStore = defineStore(
         items: (cartStore.items as CartItem[]).map((item) => {
           const price = Number(item.price || 0)
           const discount = Number(item.discount || 0)
-          const effectivePrice = discount > 0 ? price * (1 - discount / 100) : price
+          let effectivePrice = discount > 0 ? price * (1 - discount / 100) : price
+          effectivePrice = convertPrice(effectivePrice)
           return {
             product_id: item.id,
             quantity: item.quantity,
@@ -337,7 +338,7 @@ export const useCheckoutStore = defineStore(
       paymentIntentClientSecret.value = null
       currentOrderId.value = null
       paymentError.value = null
-      fxQuoteId.value = null        
+      fxQuoteId.value = null
       cartStore.clearCart()
     }
 
@@ -352,7 +353,7 @@ export const useCheckoutStore = defineStore(
       currentOrderId,
       paymentError,
       discountedTotal,
-      fxQuoteId,                    
+      fxQuoteId,
       nextStep,
       previousStep,
       createPaymentIntent,
@@ -361,7 +362,7 @@ export const useCheckoutStore = defineStore(
       clearCheckoutData,
       handleStripeRedirectCompletion,
       finalizeSuccessfulOrder,
-      getFxQuote,                   
+      getFxQuote,
     }
   },
   {

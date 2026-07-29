@@ -53,6 +53,11 @@ const formatDate = (dateString: string | undefined): string => {
     if (!dateString) return '';
     return new Date(dateString).toLocaleDateString();
 };
+
+const safeAmount = (value: string | number | null | undefined): number => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+};
 </script>
 
 <template>
@@ -78,9 +83,9 @@ const formatDate = (dateString: string | undefined): string => {
         </div>
 
         <div v-else class="space-y-6">
-            <div 
-                v-for="order in (orders as unknown as Order[])" 
-                :key="order.id" 
+            <div
+                v-for="order in (orders as unknown as Order[])"
+                :key="order.id"
                 class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-sky-500"
             >
                 <div class="flex justify-between items-center mb-4 border-b border-gray-50 pb-3">
@@ -95,16 +100,45 @@ const formatDate = (dateString: string | undefined): string => {
 
                 <div class="flex justify-between items-center py-2">
                     <span class="text-gray-600 font-medium">{{ $t('cart.total') }}:</span>
-                    <span class="text-2xl font-black text-gray-900">${{ Number(order.order_total).toFixed(2) }}</span>
+                    <span class="text-2xl font-black text-gray-900">
+                        {{ $n(safeAmount(order.order_total), 'currency') }}
+                    </span>
                 </div>
-                
+
                 <div class="mt-4 bg-gray-50 p-3 rounded-lg">
-                    <p class="font-bold text-xs uppercase text-gray-400 mb-2">{{ $t('profile.orderHistory.products') }}:</p>
-                    <ul class="text-sm space-y-2">
-                        <li v-for="item in order.items" :key="item.id" class="flex justify-between items-center">
-                            <span class="text-gray-700">{{ item.product?.title || 'Termék' }}</span> 
-                            <span class="font-mono text-gray-500">
-                                {{ item.quantity }}x <span class="text-gray-900 font-semibold">${{ Number(item.price_at_purchase).toFixed(2) }}</span>
+                    <p class="font-bold text-xs uppercase text-gray-400 mb-3">{{ $t('profile.orderHistory.products') }}:</p>
+                    <ul class="text-sm space-y-3">
+                        <li
+                            v-for="item in order.items"
+                            :key="item.id"
+                            class="flex items-center gap-3"
+                        >
+                            <div class="w-14 h-14 flex-shrink-0 rounded-lg bg-white border border-gray-100 overflow-hidden flex items-center justify-center">
+                                <img
+                                    v-if="item.product?.image"
+                                    :src="item.product.image"
+                                    :alt="item.product?.title || 'Termék'"
+                                    class="w-full h-full object-contain"
+                                />
+                                <div
+                                    v-else
+                                    class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-xs"
+                                >
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <p class="text-gray-800 font-medium truncate">
+                                    {{ item.product?.title || 'Termék' }}
+                                </p>
+                                <p class="text-gray-500 text-xs mt-0.5">
+                                    {{ item.quantity }}×
+                                </p>
+                            </div>
+
+                            <span class="font-semibold text-gray-900 whitespace-nowrap">
+                                {{ $n(safeAmount(item.price_at_purchase), 'currency') }}
                             </span>
                         </li>
                     </ul>

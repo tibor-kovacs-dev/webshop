@@ -245,7 +245,9 @@
       "credit_card_stripe": "Bankkártyás fizetés",
       "place_order_button": "Rendelés leadása",
       "processing": "Feldolgozás alatt...",
-      "error_retry": "Próbálja meg újra"
+      "error_retry": "Próbálja meg újra",
+      "testCardTitle": "Stripe tesztkártya (3D Secure)",
+      "testCardHint": "Kattints a másoláshoz, majd illeszd be az űrlapba. Csak teszt módban működik."
     },
     "express": {
       "quick_payment": "Gyors és biztonságos fizetés Apple Pay, Google Pay segítségével",
@@ -321,7 +323,17 @@
         "dark": "Sötét",
         "light": "Világos"
       },
-      "password": "Jelszó megváltoztatása"
+      "password": "Jelszó megváltoztatása",
+      "passwordChange": {
+        "mismatch": "Az új jelszavak nem egyeznek.",
+        "demoBlocked": "A demo fiók jelszava nem módosítható.",
+        "failed": "Sikertelen jelszócsere.",
+        "success": "Jelszó sikeresen megváltoztatva!",
+        "currentIncorrect": "A jelenlegi jelszó helytelen.",
+        "currentPlaceholder": "Jelenlegi jelszó",
+        "newPlaceholder": "Új jelszó",
+        "confirmPlaceholder": "Új jelszó megerősítése"
+      }
     }
   },
   "viewCategory": "Kategória megtekintése"

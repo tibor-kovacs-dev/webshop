@@ -245,7 +245,9 @@
       "credit_card_stripe": "Credit Card Payment",
       "place_order_button": "Place Order",
       "processing": "Processing...",
-      "error_retry": "Try again"
+      "error_retry": "Try again",
+      "testCardTitle": "Stripe test card (3D Secure)",
+      "testCardHint": "Click to copy, then paste into the form. Works in test mode only."
     },
     "express": {
       "quick_payment": "Quick and secure payment with Apple Pay, Google Pay",
@@ -321,7 +323,17 @@
         "dark": "Dark",
         "light": "Light"
       },
-      "password": "Change Password"
+      "password": "Change Password",
+      "passwordChange": {
+        "mismatch": "The new passwords do not match.",
+        "demoBlocked": "The demo account password cannot be changed.",
+        "failed": "Password change failed.",
+        "success": "Password changed successfully!",
+        "currentIncorrect": "The current password is incorrect.",
+        "currentPlaceholder": "Current password",
+        "newPlaceholder": "New password",
+        "confirmPlaceholder": "Confirm new password"
+      }
     }
   },
   "viewCategory": "View Category"

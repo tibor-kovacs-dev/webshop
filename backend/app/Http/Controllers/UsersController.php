@@ -92,16 +92,24 @@ class UsersController extends Controller
 
     public function changePassword(Request $request)
     {
+        $user = $request->user();
+
+        if ($user->email === 'demo@example.com') {
+            return response()->json([
+                'message' => 'The demo account password cannot be changed.',
+                'message_key' => 'profile.settings.passwordChange.demoBlocked',
+            ], 403);
+        }
+
         $request->validate([
             'current_password' => 'required|string',
             'new_password' => 'required|string|min:8',
         ]);
 
-        $user = $request->user();
-
         if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
-                'message' => 'A jelenlegi jelszó helytelen.',
+                'message' => 'The current password is incorrect.',
+                'message_key' => 'profile.settings.passwordChange.currentIncorrect',
             ], 422);
         }
 
@@ -110,7 +118,8 @@ class UsersController extends Controller
         $user->tokens()->where('id', '!=', $request->user()->currentAccessToken()->id)->delete();
 
         return response()->json([
-            'message' => 'Jelszó sikeresen módosítva.',
+            'message' => 'Password changed successfully.',
+            'message_key' => 'profile.settings.passwordChange.success',
         ]);
     }
 }

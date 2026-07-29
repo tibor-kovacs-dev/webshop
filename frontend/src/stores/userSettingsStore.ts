@@ -1,85 +1,75 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { useAuthStore } from '@/stores/authStore';
-
-export type AppTheme = 'system' | 'dark' | 'light';
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
 
 export interface UserPreferences {
-  notificationsEnabled: boolean;
-  appTheme: AppTheme;
+  notificationsEnabled: boolean
 }
 
 export const useUserSettingsStore = defineStore('settings', () => {
   const preferences = ref<UserPreferences>({
     notificationsEnabled: true,
-    appTheme: 'system',
-  });
-  
-  const isLoading = ref<boolean>(false);
-  const successMessage = ref<string>('');
-  const errorMessage = ref<string>('');
-  
-  const authStore = useAuthStore(); 
+  })
+
+  const isLoading = ref(false)
+  const successMessage = ref('')
+  const errorMessage = ref('')
+
+  const authStore = useAuthStore()
 
   const loadPreferences = async (): Promise<void> => {
-    if (!preferences.value.appTheme) {
-      preferences.value = {
-        notificationsEnabled: true,
-        appTheme: 'system',
-      };
+    if (preferences.value.notificationsEnabled === undefined) {
+      preferences.value = { notificationsEnabled: true }
     }
-  };
-  
+  }
+
   const savePreferences = async (newPrefs: UserPreferences): Promise<void> => {
-    isLoading.value = true;
-    errorMessage.value = '';
-    
+    isLoading.value = true
+    errorMessage.value = ''
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 500)); 
-      preferences.value = newPrefs;
-      successMessage.value = 'A beállítások sikeresen elmentve.';
-      
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      preferences.value = newPrefs
+      successMessage.value = 'profile.saveSuccess'
       setTimeout(() => {
-        successMessage.value = '';
-      }, 3000);
-      
-    } catch (error) {
-      errorMessage.value = 'Hiba történt a beállítások mentésekor.';
+        successMessage.value = ''
+      }, 3000)
+    } catch {
+      errorMessage.value = 'profile.settings.passwordChange.failed'
     } finally {
-      isLoading.value = false;
+      isLoading.value = false
     }
-  };
+  }
 
   const changePassword = async (oldPassword: string, newPassword: string): Promise<boolean> => {
-    errorMessage.value = '';
-    authStore.passwordChangeError = null;
-    authStore.isChangingPassword = true;
+    errorMessage.value = ''
+    authStore.passwordChangeError = null
 
     try {
-      const success = await (authStore as any).changePassword(oldPassword, newPassword);
-      
-      if (!success) {
-        return false;
-      } else {
-        successMessage.value = 'Jelszó sikeresen megváltoztatva!';
-        setTimeout(() => { successMessage.value = ''; }, 3000);
-        return true;
-      }
-    } catch (err: any) {
-        authStore.passwordChangeError = err.response?.data?.message || 'Sikertelen jelszócsere.';
-        return false;
-    } finally {
-        authStore.isChangingPassword = false;
-    }
-  };
+      const success = await authStore.changePassword(oldPassword, newPassword)
+      if (!success) return false
 
-  return { 
-    preferences, 
-    isLoading, 
-    successMessage, 
-    errorMessage, 
-    loadPreferences, 
+      successMessage.value = 'profile.settings.passwordChange.success'
+      setTimeout(() => {
+        successMessage.value = ''
+      }, 3000)
+      return true
+    } catch (err: any) {
+      authStore.passwordChangeError =
+        err.response?.data?.message_key ||
+        err.response?.data?.message ||
+        'profile.settings.passwordChange.failed'
+      return false
+    }
+  }
+
+  return {
+    preferences,
+    isLoading,
+    successMessage,
+    errorMessage,
+    loadPreferences,
     savePreferences,
-    changePassword
-  };
-});
+    changePassword,
+  }
+})
