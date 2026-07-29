@@ -140,6 +140,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function changePassword(currentPassword: string, newPassword: string): Promise<boolean> {
+    await axios.post('/api/users/change-password', {
+      current_password: currentPassword,
+      new_password: newPassword,
+    })
+    return true
+  }
+
   function logout(): void {
     isAuthenticated.value = false
     user.value = null
@@ -167,6 +175,7 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     resendVerificationEmail,
+    changePassword,
   }
 },
 {

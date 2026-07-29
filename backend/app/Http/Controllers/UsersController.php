@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth; // Hozzáadva az Auth::user() használatához
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 
 class UsersController extends Controller
@@ -66,8 +66,51 @@ class UsersController extends Controller
         ]);
     }
 
-    public function index(){
-        $users = User::all();
-        return response()->json(['users' => $users]);
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'first_name'   => 'sometimes|required|string|max:255',
+            'last_name'    => 'sometimes|required|string|max:255',
+            'phone'        => 'sometimes|nullable|string|max:30',
+            'zipcode'      => 'sometimes|nullable|string|max:20',
+            'city'         => 'sometimes|nullable|string|max:255',
+            'street'       => 'sometimes|nullable|string|max:255',
+            'house_number' => 'sometimes|nullable|string|max:50',
+            'apartment'    => 'sometimes|nullable|string|max:50',
+        ]);
+
+        $user->fill($validated);
+        $user->save();
+
+        return response()->json([
+            'user' => $user,
+            'message' => 'A profil adatok sikeresen frissültek!',
+        ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'message' => 'A jelenlegi jelszó helytelen.',
+            ], 422);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+        $user->tokens()->where('id', '!=', $request->user()->currentAccessToken()->id)->delete();
+
+        return response()->json([
+            'message' => 'Jelszó sikeresen módosítva.',
+        ]);
     }
 }

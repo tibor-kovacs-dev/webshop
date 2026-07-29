@@ -79,7 +79,8 @@ if (authStore.isAuthenticated) {
   <TheNavigation />
   <TheBreadcrumb />
 
-  <div class="bg-gradient-to-br from-sky-50 via-white to-indigo-50 flex items-center justify-center px-4 py-12 min-h-screen">
+  <div
+    class="bg-gradient-to-br from-sky-50 via-white to-indigo-50 flex items-center justify-center px-4 py-12 min-h-screen">
     <div class="w-full max-w-md">
       <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
         <div class="bg-gradient-to-r from-sky-500 to-indigo-600 px-8 py-10 text-center">
@@ -92,26 +93,28 @@ if (authStore.isAuthenticated) {
         </div>
 
         <div class="px-8 py-10">
-          <div v-if="authStore.authSuccessMessage" class="mb-6 p-4 bg-green-50 border border-green-200 text-green-800 rounded-xl text-center">
+          <div v-if="authStore.authSuccessMessage"
+            class="mb-6 p-4 bg-green-50 border border-green-200 text-green-800 rounded-xl text-center">
             {{ authStore.authSuccessMessage }}
           </div>
 
-          <div v-if="authStore.authError" class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-xl text-center">
+          <div v-if="authStore.authError"
+            class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-xl text-center">
             <p class="font-bold">{{ t('auth.errorOccurred') }}</p>
             <p>{{ authStore.authError }}</p>
           </div>
 
           <div v-if="isLogin" class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
             <p class="text-sm font-semibold text-amber-900 mb-1">
-              {{ t('auth.demoTitle') || 'Ez egy portfólió projekt — nincs szükség regisztrációra' }}
+              {{ t('auth.demoTitle') || 'This is a portfolio project — no registration required' }}
             </p>
             <p class="text-sm text-amber-800 mb-3">
-              {{ t('auth.demoText') || 'Próbáld ki a demó fiókkal:' }}
+              {{ t('auth.demoText') || 'Try the demo account:' }}
               <span class="font-mono block mt-1">demo@example.com / Demo12345</span>
             </p>
             <button type="button" @click="loginWithDemo" :disabled="authStore.isLoading"
               class="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition">
-              {{ t('auth.demoButton') || 'Belépés a demó fiókkal' }}
+              {{ t('auth.demoButton') || 'Sign in with the demo account' }}
             </button>
           </div>
 
@@ -171,15 +174,19 @@ if (authStore.isAuthenticated) {
 .fade-up-enter-active {
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
+
 .fade-up-enter-from {
   opacity: 0;
   transform: translateY(40px);
 }
 
-.slide-fade-enter-active, .slide-fade-leave-active {
+.slide-fade-enter-active,
+.slide-fade-leave-active {
   transition: all 0.4s ease;
 }
-.slide-fade-enter-from, .slide-fade-leave-to {
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
   opacity: 0;
   transform: translateY(-20px);
 }
@@ -187,6 +194,7 @@ if (authStore.isAuthenticated) {
 .list-enter-active {
   transition: all 0.5s ease;
 }
+
 .list-enter-from {
   opacity: 0;
   transform: translateX(30px);

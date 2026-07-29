@@ -26,17 +26,17 @@ const preFillShippingData = (): void => {
       details.last_name = (user.name as any).lastname || '';
     } else if (typeof user.name === 'string') {
       const parts = user.name.split(' ');
-      details.first_name = parts.slice(1).join(' ') || '';
-      details.last_name = parts[0] || '';
+      details.first_name = parts[0] || '';
+      details.last_name = parts.slice(1).join(' ') || '';
     }
 
     details.email = user.email;
 
-    const userAddress = (user as any).address;
-    if (userAddress) {
-      details.zipcode = userAddress.zipcode || '';
-      details.city = userAddress.city || '';
-      details.street = userAddress.street || '';
+    if (user.zipcode || user.city || user.street || user.house_number) {
+      details.zipcode = user.zipcode || '';
+      details.city = user.city || '';
+      details.street = user.street || '';
+      details.house_number = user.house_number || '';
     }
 
     console.log('Szállítási adatok automatikusan kitöltve.');

@@ -143,6 +143,9 @@
   "auth": {
     "loginTitle": "Login",
     "loginSubtitle": "Welcome back! Please sign in.",
+    "demoTitle": "This is a portfolio project — no registration required",
+    "demoText": "Try the demo account:",
+    "demoButton": "Sign in with the demo account",
     "registerTitle": "Register",
     "registerSubtitle": "Create a new account.",
     "firstName": "First Name",

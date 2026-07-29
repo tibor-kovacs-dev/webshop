@@ -64,14 +64,15 @@ Route::post('/users/login', [UsersController::class, 'login']);
 
 
 
-Route::get('/users', [UsersController::class, 'index'])
-
-->middleware('auth:sanctum');
-
-
 Route::get('/users/me', [UsersController::class, 'getAuthenticatedUser'])
 
 ->middleware('auth:sanctum');
+
+Route::patch('/users/profile', [UsersController::class, 'updateProfile'])
+    ->middleware('auth:sanctum');
+
+Route::post('/users/change-password', [UsersController::class, 'changePassword'])
+    ->middleware('auth:sanctum');
 
 Route::post('/password/forgot', [PasswordController::class, 'sendResetLink']);
 Route::post('/password/reset', [PasswordController::class, 'reset']);

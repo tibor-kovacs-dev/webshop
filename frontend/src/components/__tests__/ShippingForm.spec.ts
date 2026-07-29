@@ -47,7 +47,9 @@ describe('ShippingForm.vue', () => {
     const mockUser = {
       email: 'teszt@elek.hu',
       name: { firstname: 'Elek', lastname: 'Teszt' },
-      address: { zipcode: '1234', city: 'Sopron', street: 'Fő utca' }
+      zipcode: '1234',
+      city: 'Sopron',
+      street: 'Fő utca'
     }
 
     const wrapper = mount(ShippingForm, createGlobalConfig(pinia))
@@ -70,13 +72,13 @@ describe('ShippingForm.vue', () => {
 
     userStore.user = {
       email: 'istvan@kovacs.hu',
-      name: 'Kovács István'
+      name: 'István Kovács'
     } as any
 
     await wrapper.vm.$nextTick()
 
-    expect(checkoutStore.shippingDetails.last_name).toBe('Kovács')
     expect(checkoutStore.shippingDetails.first_name).toBe('István')
+    expect(checkoutStore.shippingDetails.last_name).toBe('Kovács')
   })
 
   it('meghívja a getUserData-t onMounted során, ha nincs user', () => {
