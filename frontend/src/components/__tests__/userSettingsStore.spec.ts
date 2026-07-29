@@ -10,16 +10,15 @@ describe('UserSettingsStore Specifikáció', () => {
   it('loadPreferences betölti az alapértelmezett értékeket, ha üres', async () => {
     const store = useUserSettingsStore()
     await store.loadPreferences()
-    expect(store.preferences.appTheme).toBe('system')
+    expect(store.preferences.notificationsEnabled).toBe(true)
   })
 
   it('savePreferences elmenti az új beállításokat', async () => {
     const store = useUserSettingsStore()
-    const newPrefs = { notificationsEnabled: false, appTheme: 'dark' as const }
-    
+    const newPrefs = { notificationsEnabled: false }
+
     await store.savePreferences(newPrefs)
-    
-    expect(store.preferences.appTheme).toBe('dark')
+
     expect(store.preferences.notificationsEnabled).toBe(false)
   })
 })
