@@ -10,38 +10,62 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    public function test_users_can_authenticate_using_the_login_endpoint(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'password' => bcrypt('password'),
+        ]);
 
-        $response = $this->post('/login', [
+        $response = $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response
+            ->assertOk()
+            ->assertJsonStructure(['user' => ['id', 'email', 'token']]);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'password' => bcrypt('password'),
+        ]);
 
-        $this->post('/login', [
+        $response = $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
-        $this->assertGuest();
+        $response
+            ->assertUnauthorized()
+            ->assertJson(['message' => 'Invalid email or password']);
     }
 
-    public function test_users_can_logout(): void
+    public function test_logging_in_again_revokes_the_previous_token(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'password' => bcrypt('password'),
+        ]);
 
-        $response = $this->actingAs($user)->post('/logout');
+        $first = $this->postJson('/api/users/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
 
-        $this->assertGuest();
-        $response->assertNoContent();
+        $this->assertCount(1, $user->fresh()->tokens);
+
+        $second = $this->postJson('/api/users/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $first->assertOk();
+        $second->assertOk();
+        $this->assertCount(1, $user->fresh()->tokens);
+        $this->assertNotSame(
+            $first->json('user.token'),
+            $second->json('user.token'),
+        );
     }
 }

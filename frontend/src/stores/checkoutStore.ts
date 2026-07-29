@@ -6,7 +6,6 @@ import { useCartStore, type CartItem } from './cartStore'
 import { useOrderHistoryStore } from './orderHistoryStore'
 import router from '@/router'
 import { getCurrentCurrency } from '../i18n/i18n'
-import { useI18n } from 'vue-i18n'
 import { usePrice } from '@/composables/usePrice'
 
 export interface ShippingDetails {
@@ -30,8 +29,6 @@ export const useCheckoutStore = defineStore(
     const authStore = useAuthStore()
     const cartStore = useCartStore()
     const { convertPrice } = usePrice()
-
-    const { locale } = useI18n()
 
     const shippingDetails = reactive<ShippingDetails>({
       first_name: '',

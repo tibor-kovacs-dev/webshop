@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:5173', 'http://localhost:3000', 'https://webshop-laravel-backend-production.up.railway.app')],
+    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:5173', 'https://webshop-laravel-backend-production.up.railway.app')],
 
     'allowed_origins_patterns' => [],
 

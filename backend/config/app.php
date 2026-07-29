@@ -56,6 +56,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Frontend URL
+    |--------------------------------------------------------------------------
+    |
+    | The base URL of the Vue SPA. Used to build links that point back to
+    | the frontend from backend code — e.g. the password reset email and
+    | the email verification redirect. Set FRONTEND_URL in .env; falls back
+    | to the local Vite dev server URL if unset.
+    |
+    */
+
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:5173'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

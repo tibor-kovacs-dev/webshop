@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { type Product } from './productStore'
-import { useI18n } from 'vue-i18n'
 import { usePrice } from '@/composables/usePrice'
 
 export interface CartItem extends Product {
@@ -11,7 +10,6 @@ export interface CartItem extends Product {
 export const useCartStore = defineStore(
   'cart',
   () => {
-    const { locale } = useI18n()
     const { convertPrice } = usePrice()
 
     const items = ref<CartItem[]>([])
