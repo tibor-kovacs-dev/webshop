@@ -12,6 +12,8 @@ Full-stack e-commerce application with a Vue 3 storefront, a Laravel REST API, a
 
 **Live demo:** https://project-pf3cc.vercel.app/
 
+**Demo login:** `demo@example.com` / `Demo12345` (also shown directly on the login screen — no registration needed to try it out)
+
 ---
 
 ## Screenshots

@@ -22,6 +22,9 @@ const router = useRouter()
 
 const isLogin = ref(true)
 
+const DEMO_EMAIL = 'demo@example.com'
+const DEMO_PASSWORD = 'Demo12345'
+
 const form = reactive<AuthForm>({
   first_name: '',
   last_name: '',
@@ -49,6 +52,12 @@ const handleSubmit = async () => {
 
   form.password = ''
   form.password_confirmation = ''
+}
+
+const loginWithDemo = async () => {
+  form.email = DEMO_EMAIL
+  form.password = DEMO_PASSWORD
+  await handleSubmit()
 }
 
 watch(isLogin, () => {
@@ -90,6 +99,20 @@ if (authStore.isAuthenticated) {
           <div v-if="authStore.authError" class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-xl text-center">
             <p class="font-bold">{{ t('auth.errorOccurred') }}</p>
             <p>{{ authStore.authError }}</p>
+          </div>
+
+          <div v-if="isLogin" class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <p class="text-sm font-semibold text-amber-900 mb-1">
+              {{ t('auth.demoTitle') || 'Ez egy portfólió projekt — nincs szükség regisztrációra' }}
+            </p>
+            <p class="text-sm text-amber-800 mb-3">
+              {{ t('auth.demoText') || 'Próbáld ki a demó fiókkal:' }}
+              <span class="font-mono block mt-1">demo@example.com / Demo12345</span>
+            </p>
+            <button type="button" @click="loginWithDemo" :disabled="authStore.isLoading"
+              class="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2.5 rounded-lg transition">
+              {{ t('auth.demoButton') || 'Belépés a demó fiókkal' }}
+            </button>
           </div>
 
           <form @submit.prevent="handleSubmit" class="space-y-6">

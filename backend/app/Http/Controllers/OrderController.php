@@ -17,9 +17,8 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Auth::user()->orders()
-            ->with(['products' => function ($query) {
-                $query->select('products.id', 'products.name as title')
-                    ->withPivot('quantity', 'price');
+            ->with(['items.product' => function ($query) {
+                $query->select('products.id', 'products.name as title', 'products.image');
             }])
             ->latest()
             ->get();
@@ -27,16 +26,21 @@ class OrderController extends Controller
         return response()->json($orders->map(function ($order) {
             return [
                 'id' => $order->id,
-                'date' => $order->created_at,
-                'orderTotal' => (float) $order->order_total,
+                'created_at' => $order->created_at,
+                'order_total' => (float) $order->order_total,
                 'status' => $order->status,
-                'shippingDetails' => $order->shipping_details,
-                'products' => $order->products->map(function ($product) {
+                'payment_method' => $order->payment_method,
+                'shipping_details' => $order->shipping_details,
+                'items' => $order->items->map(function ($item) {
                     return [
-                        'productId' => $product->id,
-                        'title' => $product->title,
-                        'quantity' => $product->pivot->quantity,
-                        'price' => (float) $product->pivot->price,
+                        'id' => $item->id,
+                        'product_id' => $item->product_id,
+                        'quantity' => $item->quantity,
+                        'price_at_purchase' => (float) $item->price,
+                        'product' => $item->product ? [
+                            'title' => $item->product->title,
+                            'image' => $item->product->image,
+                        ] : null,
                     ];
                 }),
             ];
