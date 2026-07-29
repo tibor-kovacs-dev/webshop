@@ -4,11 +4,16 @@ import { createPinia, setActivePinia } from 'pinia'
 import CartNotification from '@/components/CartNotification.vue'
 import { useCartStore } from '@/stores/cartStore'
 
-// i18n és RouterLink mockolása
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key: string) => key,
     locale: { value: 'hu' }
+  }),
+  createI18n: () => ({
+    global: {
+      locale: 'hu',
+      t: (key: string) => key
+    }
   })
 }))
 

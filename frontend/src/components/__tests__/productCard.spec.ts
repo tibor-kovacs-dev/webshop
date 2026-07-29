@@ -50,7 +50,7 @@ describe('ProductCard.vue', () => {
           'StarRating': true
         },
         mocks: {
-          $n: (val: number) => val.toLocaleString()
+          $n: (val: number) => String(val)
         }
       }
     })
