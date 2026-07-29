@@ -1,8 +1,21 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import PaymentMethod from '../checkout/PaymentMethod.vue'
 import { useCheckoutStore } from '@/stores/checkoutStore'
+
+vi.mock('vue-i18n', () => ({
+  useI18n: () => ({
+    t: (key: string) => key,
+    locale: { value: 'hu' }
+  }),
+  createI18n: () => ({
+    global: {
+      locale: 'hu',
+      t: (key: string) => key
+    }
+  })
+}))
 
 describe('PaymentMethod.vue', () => {
   beforeEach(() => {

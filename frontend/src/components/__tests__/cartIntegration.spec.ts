@@ -18,6 +18,8 @@ const i18n = createI18n({
         addedToCart: 'Hozzáadva a kosárhoz',
         goToCart: 'Kosárba',
         continueShopping: 'Vásárlás folytatása',
+        close: 'Bezárás',
+        quantity: 'db',
       },
     },
   },

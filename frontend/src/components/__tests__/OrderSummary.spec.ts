@@ -1,8 +1,30 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import OrderSummary from '../checkout/OrderSummary.vue'
 import { useCartStore } from '@/stores/cartStore'
+
+vi.mock('vue-i18n', () => ({
+  useI18n: () => ({
+    t: (key: string) => key,
+    locale: { value: 'hu' }
+  }),
+  createI18n: () => ({
+    global: {
+      locale: 'hu',
+      t: (key: string) => key
+    }
+  })
+}))
+
+// A usePrice a valódi i18n singleton-ból olvassa ki a pénznemet (böngésző
+// nyelve alapján), ami kiszámíthatatlanná tenné az átváltott összegeket a
+// tesztben. Ezért stuboljuk, hogy az összegek változatlanul menjenek át.
+vi.mock('@/composables/usePrice', () => ({
+  usePrice: () => ({
+    convertPrice: (price: number) => price
+  })
+}))
 
 describe('OrderSummary.vue', () => {
   beforeEach(() => {
@@ -12,7 +34,10 @@ describe('OrderSummary.vue', () => {
   const globalConfig = (pinia: any) => ({
     global: {
       plugins: [pinia],
-      mocks: { $t: (msg: string) => msg },
+      mocks: {
+        $t: (msg: string) => msg,
+        $n: (val: number) => val.toFixed(2)
+      },
       stubs: { 'font-awesome-icon': true }
     }
   })
