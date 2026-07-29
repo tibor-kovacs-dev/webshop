@@ -7,10 +7,10 @@ Full-stack e-commerce application with a Vue 3 storefront, a Laravel REST API, a
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
 [![Stripe](https://img.shields.io/badge/Payments-Stripe-635BFF?logo=stripe&logoColor=white)](https://stripe.com/)
 [![MySQL](https://img.shields.io/badge/DB-MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Backend CI](https://github.com/tibor-kovacs-dev/webshop/actions/workflows/backend.yml/badge.svg)](https://github.com/tibor-kovacs-dev/webshop/actions/workflows/backend.yml)
+[![Frontend CI](https://github.com/tibor-kovacs-dev/webshop/actions/workflows/frontend.yml/badge.svg)](https://github.com/tibor-kovacs-dev/webshop/actions/workflows/frontend.yml)
 
 **Live demo:** https://project-pf3cc.vercel.app/
-
-> Replace the two links above with your actual Vercel and Railway URLs.
 
 ---
 
@@ -24,7 +24,7 @@ Full-stack e-commerce application with a Vue 3 storefront, a Laravel REST API, a
 
 ## Overview
 
-Webshop is a full-stack online store built to demonstrate a production-style separation between a decoupled SPA frontend and a REST API backend. The frontend is a Vue 3 + TypeScript application (Vite, Pinia, Vue Router, i18n) deployed on Vercel; the backend is a Laravel 12 API deployed on Railway, backed by MySQL and Stripe for payments.
+Webshop is a full-stack online store built to demonstrate a production-style separation between a decoupled SPA frontend and a REST API backend. The frontend is a Vue 3 + TypeScript application (Vite, Pinia, Vue Router, i18n) deployed on Vercel; the backend is a Laravel 12 API deployed on Railway, backed by MySQL and Stripe for payments, including multi-currency support.
 
 ## Architecture
 
@@ -34,6 +34,7 @@ graph LR
     FE -->|REST / JSON, Axios| BE[Laravel API<br/>Railway]
     BE -->|Eloquent| DB[(MySQL)]
     BE -->|Create Payment Intent| ST[Stripe API]
+    BE -->|Create FX Quote| ST
     ST -->|Webhook: payment status| BE
     BE -->|Sanctum token auth| FE
 ```
@@ -41,6 +42,7 @@ graph LR
 - **Frontend → Backend:** JSON REST calls over HTTPS, authenticated with Laravel Sanctum tokens.
 - **Backend → Database:** Eloquent ORM against MySQL (SQLite for local development).
 - **Payments:** the backend creates a Stripe Payment Intent; the frontend confirms it client-side with Stripe.js; Stripe notifies the backend of the final payment status via webhook.
+- **Multi-currency:** if the customer's selected currency isn't the store's base currency (HUF), the frontend requests a Stripe FX Quote (rate locked for one hour) before creating the payment intent, so the charged amount matches what was displayed at checkout.
 
 ## Tech Stack
 
@@ -49,10 +51,11 @@ graph LR
 | Core | Vue 3 (Composition API, `<script setup>`), TypeScript, Vite | Laravel 12, PHP 8.2 |
 | State / Data | Pinia (with persisted state), Axios | Eloquent ORM, MySQL |
 | Auth | Sanctum token stored client-side | Laravel Sanctum |
-| Payments | Stripe.js / `@vue-stripe/vue-stripe` | `stripe/stripe-php`, webhook handling |
+| Payments | Stripe.js / `@vue-stripe/vue-stripe` | `stripe/stripe-php`, Stripe FX Quotes, webhook handling |
 | i18n | vue-i18n (EN / DE / HU) | `spatie/laravel-translatable` (translatable product content) |
 | Styling | Tailwind CSS | — |
 | Testing | Vitest (unit), Playwright (e2e) | PHPUnit |
+| CI | GitHub Actions — build + unit tests on every push/PR | GitHub Actions — `php artisan test` on every push/PR |
 | Deployment | Vercel | Railway |
 
 ## Key Features
@@ -62,6 +65,7 @@ graph LR
 - Product detail pages with comments/reviews
 - Shopping cart and wishlist with persisted state
 - Multi-language UI (English, German, Hungarian)
+- Multi-currency prices (HUF, EUR, USD) with a locked FX rate carried through to checkout
 
 **Accounts**
 - Registration, login, email verification
@@ -70,6 +74,7 @@ graph LR
 
 **Checkout & Payments**
 - Stripe-based checkout with payment intent creation
+- Currency conversion via Stripe FX Quotes for non-HUF checkouts
 - Retry payment on failed orders
 - Refund requests
 - Stripe webhook for asynchronous payment status updates
@@ -85,17 +90,18 @@ webshop/
 │   ├── src/
 │   │   ├── views/         # Page-level components
 │   │   ├── components/    # Reusable UI components
-│   │   ├── stores/        # Pinia stores (cart, auth, orders, wishlist, ...)
+│   │   ├── stores/        # Pinia stores (cart, auth, orders, wishlist, checkout...)
 │   │   ├── router/
 │   │   └── locales/       # en / de / hu translations
 │   └── vercel.json
 ├── backend/           # Laravel 12 REST API (Railway)
 │   ├── app/
-│   │   ├── Http/Controllers/   # Products, Orders, Payment, Users, Auth...
+│   │   ├── Http/Controllers/   # Products, Orders, Payment (incl. FX quotes), Users, Auth...
 │   │   ├── Models/             # Product, Order, OrderItem, Review, User
 │   │   └── Jobs/ Mail/         # Order confirmation & notification emails
 │   ├── database/migrations/
 │   └── routes/api.php
+├── .github/workflows/  # frontend.yml, backend.yml
 └── README.md
 ```
 
@@ -161,7 +167,7 @@ npm run build   # outputs to frontend/dist
 |---|---|
 | `APP_URL` | Public URL of the API |
 | `DB_CONNECTION`, `DB_HOST`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Database connection |
-| `STRIPE_KEY` / `STRIPE_SECRET` | Stripe API credentials |
+| `STRIPE_KEY` / `STRIPE_SECRET` | Stripe API credentials (also used for FX Quotes) |
 | `MAIL_*` | Outgoing mail configuration (order confirmations, password reset) |
 
 **Frontend (`frontend/.env`)**
@@ -192,5 +198,3 @@ npm run test
 # Frontend — end-to-end tests
 npx playwright test
 ```
-
-
