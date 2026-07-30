@@ -92,6 +92,7 @@ describe('Checkout Folyamat Integráció', () => {
     checkoutStore.paymentMethod = 'credit_card_stripe'
     checkoutStore.shippingDetails.first_name = 'Teszt'
     checkoutStore.shippingDetails.city = 'Budapest'
+    checkoutStore.termsAccepted = true
 
 
     ;(axios.post as any).mockResolvedValueOnce({ data: { order_id: 'ORD-123' } })

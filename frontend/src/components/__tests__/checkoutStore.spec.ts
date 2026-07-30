@@ -29,6 +29,7 @@ describe('CheckoutStore Specifikáció', () => {
     authStore.isAuthenticated = true
     cartStore.items = [{ id: 1, quantity: 1, price: 100 } as any]
     store.paymentMethod = 'cash'
+    store.termsAccepted = true
 
     ;(axios.post as any).mockRejectedValueOnce(new Error('Database error'))
 
@@ -36,7 +37,7 @@ describe('CheckoutStore Specifikáció', () => {
 
     expect(result).toBe(false)
     expect(store.isProcessingOrder).toBe(false)
-    expect(store.paymentError).toBe('Hiba történt a rendelés rögzítésekor.')
+    expect(store.paymentError).toBe('checkout.errors.orderFailed')
   })
 
   it('lekezeli a Stripe megerősítési hibát', async () => {
@@ -48,6 +49,7 @@ describe('CheckoutStore Specifikáció', () => {
     cartStore.items = [{ id: 1, quantity: 1, price: 100 } as any]
     store.paymentMethod = 'credit_card_stripe'
     store.paymentIntentClientSecret = 'pi_123_secret_456'
+    store.termsAccepted = true
 
 
     ;(axios.post as any).mockResolvedValueOnce({ data: { order_id: 'ORDER-123' } })
@@ -71,11 +73,11 @@ describe('CheckoutStore Specifikáció', () => {
     const authStore = useAuthStore()
     
     authStore.isAuthenticated = false
-    
+
     const result = await store.placeOrder()
-    
+
     expect(result).toBe(false)
-    expect(window.alert).toHaveBeenCalledWith('Hiányzó adatok a rendeléshez!')
+    expect(store.paymentError).toBe('checkout.errors.missingData')
   })
 
   it('finalizeSuccessfulOrder hiba esetén beállítja a megfelelő hibaüzenetet', async () => {
@@ -85,7 +87,7 @@ describe('CheckoutStore Specifikáció', () => {
     const result = await store.finalizeSuccessfulOrder('pi_123')
 
     expect(result).toBe(false)
-    expect(store.paymentError).toBe('Hiba a rendelés véglegesítésekor.')
+    expect(store.paymentError).toBe('checkout.errors.finalizeFailed')
   })
 
   it('loadOrderForRetry hiba esetén a kosárhoz irányít', async () => {
