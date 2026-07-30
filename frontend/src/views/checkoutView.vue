@@ -86,7 +86,7 @@ const handlePlaceOrder = async (): Promise<void> => {
           :aria-current="checkoutStore.currentStep === step.id ? 'step' : undefined">
 
           <div v-if="index > 0" class="absolute top-7 left-0 w-full h-1 -translate-x-1/2 transition-colors duration-300"
-            :class="checkoutStore.currentStep > step.id ? 'bg-sky-500' : 'bg-gray-300'" aria-hidden="true"></div>
+            :class="checkoutStore.currentStep >= step.id ? 'bg-sky-500' : 'bg-gray-300'" aria-hidden="true"></div>
 
           <div
             class="relative z-10 w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 shadow-lg"

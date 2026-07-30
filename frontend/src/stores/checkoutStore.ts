@@ -100,7 +100,7 @@ export const useCheckoutStore = defineStore(
         fxQuoteId.value = response.data.id
         return response.data.id
       } catch (error) {
-        console.warn('FX Quote lekérés sikertelen, fallback nélkül folytatjuk:', error)
+        console.warn('FX Quote request failed, continuing without quote:', error)
         fxQuoteId.value = null
         return null
       }
@@ -150,10 +150,10 @@ export const useCheckoutStore = defineStore(
         paymentIntentClientSecret.value = intentResponse.data.client_secret
         return true
       } catch (error: any) {
-        console.error('Payment Intent hiba:', error.response?.data || error.message)
+        console.error('Payment Intent error:', error.response?.data || error.message)
         paymentIntentClientSecret.value = null
         paymentError.value =
-          error.response?.data?.error || 'Hiba a kártyás fizetés előkészítésekor.'
+          error.response?.data?.error || 'checkout.errors.intentFailed'
         return false
       }
     }
@@ -170,8 +170,8 @@ export const useCheckoutStore = defineStore(
         currentStep.value = 4
         return true
       } catch (error) {
-        console.error('Véglegesítési hiba:', error)
-        paymentError.value = 'Hiba a rendelés véglegesítésekor.'
+        console.error('Finalize error:', error)
+        paymentError.value = 'checkout.errors.finalizeFailed'
         return false
       }
     }
@@ -182,7 +182,12 @@ export const useCheckoutStore = defineStore(
       locale: string = 'en',
     ): Promise<boolean> {
       if (!authStore.isAuthenticated || cartStore.items.length === 0 || !paymentMethod.value) {
-        alert('Hiányzó adatok a rendeléshez!')
+        paymentError.value = 'checkout.errors.missingData'
+        return false
+      }
+
+      if (!termsAccepted.value) {
+        paymentError.value = 'checkout.errors.termsRequired'
         return false
       }
 
@@ -222,7 +227,7 @@ export const useCheckoutStore = defineStore(
           : `${API_URL}/api/orders`
 
         const orderResponse = await axios.post(requestUrl, orderPayload)
-        if (!orderResponse.data.order_id) throw new Error('Sikertelen rögzítés')
+        if (!orderResponse.data.order_id) throw new Error('Order create failed')
 
         currentOrderId.value = orderResponse.data.order_id
 
@@ -236,7 +241,7 @@ export const useCheckoutStore = defineStore(
           })
 
           if (stripeError) {
-            paymentError.value = stripeError.message || 'Fizetési hiba'
+            paymentError.value = stripeError.message || 'checkout.errors.paymentFailed'
             isProcessingOrder.value = false
             return false
           }
@@ -246,8 +251,8 @@ export const useCheckoutStore = defineStore(
         isProcessingOrder.value = false
         return true
       } catch (error) {
-        console.error('Rendelés hiba:', error)
-        paymentError.value = 'Hiba történt a rendelés rögzítésekor.'
+        console.error('Order error:', error)
+        paymentError.value = 'checkout.errors.orderFailed'
         isProcessingOrder.value = false
         return false
       }
@@ -296,12 +301,12 @@ export const useCheckoutStore = defineStore(
         paymentMethod.value = orderData.payment_method as PaymentMethod
 
         const intentSuccess = await createPaymentIntent()
-        if (!intentSuccess) throw new Error('Intent hiba')
+        if (!intentSuccess) throw new Error('Intent error')
 
         isProcessingOrder.value = false
         return true
       } catch (error) {
-        console.error('Retry load hiba:', error)
+        console.error('Retry load error:', error)
         router.push('/cart')
         return false
       } finally {
@@ -368,7 +373,7 @@ export const useCheckoutStore = defineStore(
   {
     persist: {
       storage: localStorage,
-      paths: ['shippingDetails', 'paymentMethod', 'termsAccepted', 'currentStep', 'currentOrderId'],
+      paths: ['shippingDetails', 'paymentMethod', 'currentStep', 'currentOrderId'],
     } as any,
   },
 )

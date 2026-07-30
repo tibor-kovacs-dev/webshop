@@ -276,6 +276,14 @@
       "error_message": "Hiba: Nem sikerült véglegesíteni a fizetést.",
       "redirecting": "Átirányítás az összefoglalóhoz...",
       "back_to_checkout": "Vissza a pénztárhoz"
+    },
+    "errors": {
+      "intentFailed": "Nem sikerült előkészíteni a kártyás fizetést.",
+      "finalizeFailed": "Nem sikerült véglegesíteni a rendelést.",
+      "missingData": "Hiányzó adatok a rendeléshez.",
+      "termsRequired": "A feltételek elfogadása kötelező.",
+      "paymentFailed": "Sikertelen fizetés.",
+      "orderFailed": "Nem sikerült rögzíteni a rendelést."
     }
   },
   "profile": {

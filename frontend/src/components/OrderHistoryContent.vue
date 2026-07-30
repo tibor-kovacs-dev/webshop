@@ -1,28 +1,8 @@
 <script setup lang="ts">
-import { useOrderHistoryStore } from '@/stores/orderHistoryStore';
+import { useOrderHistoryStore, type Order } from '@/stores/orderHistoryStore';
 import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-
-interface OrderItem {
-    id: number;
-    product_id: number;
-    quantity: number;
-    price_at_purchase: string | number;
-    product?: {
-        title: string;
-        image?: string;
-    };
-}
-
-interface Order {
-    id: string | number;
-    order_total: string | number;
-    status: "pending" | "processing" | "completed" | "refunded" | "pending_payment";
-    created_at: string;
-    items: OrderItem[];
-    payment_method: string;
-}
 
 const { t } = useI18n();
 const historyStore = useOrderHistoryStore();
@@ -58,6 +38,19 @@ const safeAmount = (value: string | number | null | undefined): number => {
     const n = Number(value);
     return Number.isFinite(n) ? n : 0;
 };
+
+// Formats an amount using the order's OWN currency, not the viewer's current
+// UI language — otherwise switching the app language would relabel old
+// orders with the wrong currency symbol without converting the amount.
+const formatOrderAmount = (value: string | number | null | undefined, currency: string | undefined): string => {
+    const amount = safeAmount(value);
+    const normalizedCurrency = (currency || 'huf').toUpperCase();
+    return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: normalizedCurrency,
+        maximumFractionDigits: normalizedCurrency === 'HUF' ? 0 : 2,
+    }).format(amount);
+};
 </script>
 
 <template>
@@ -84,7 +77,7 @@ const safeAmount = (value: string | number | null | undefined): number => {
 
         <div v-else class="space-y-6">
             <div
-                v-for="order in (orders as unknown as Order[])"
+                v-for="order in orders"
                 :key="order.id"
                 class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-sky-500"
             >
@@ -101,7 +94,7 @@ const safeAmount = (value: string | number | null | undefined): number => {
                 <div class="flex justify-between items-center py-2">
                     <span class="text-gray-600 font-medium">{{ $t('cart.total') }}:</span>
                     <span class="text-2xl font-black text-gray-900">
-                        {{ $n(safeAmount(order.order_total), 'currency') }}
+                        {{ formatOrderAmount(order.order_total, order.currency) }}
                     </span>
                 </div>
 
@@ -138,7 +131,7 @@ const safeAmount = (value: string | number | null | undefined): number => {
                             </div>
 
                             <span class="font-semibold text-gray-900 whitespace-nowrap">
-                                {{ $n(safeAmount(item.price_at_purchase), 'currency') }}
+                                {{ formatOrderAmount(item.price_at_purchase, order.currency) }}
                             </span>
                         </li>
                     </ul>

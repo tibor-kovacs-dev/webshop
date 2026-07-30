@@ -22,6 +22,7 @@ export interface Order {
     items: OrderItem[];
     payment_method: string;
     shipping_details: string;
+    currency: string;
 }
 
 export const useOrderHistoryStore = defineStore('orderHistory', () => {

@@ -276,6 +276,14 @@
       "error_message": "Error: Could not finalize the payment.",
       "redirecting": "Redirecting to summary...",
       "back_to_checkout": "Back to Checkout"
+    },
+    "errors": {
+      "intentFailed": "Could not prepare card payment.",
+      "finalizeFailed": "Could not finalize the order.",
+      "missingData": "Missing data required to place the order.",
+      "termsRequired": "You must accept the terms and conditions.",
+      "paymentFailed": "Payment failed.",
+      "orderFailed": "Could not place the order."
     }
   },
   "profile": {

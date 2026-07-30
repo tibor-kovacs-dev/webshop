@@ -32,7 +32,7 @@ async function copyTestValue(value: string, field: string): Promise<void> {
       if (copiedField.value === field) copiedField.value = null
     }, 2000)
   } catch {
-    // fallback: select not available in all contexts
+    // clipboard not available
   }
 }
 
@@ -101,6 +101,12 @@ onMounted(() => {
 
 async function handlePayment(): Promise<void> {
   error.value = null
+
+  if (!checkoutStore.termsAccepted) {
+    error.value = t('checkout.summary.acceptTerms')
+    return
+  }
+
   isLoading.value = true
 
   if (!elements || !stripe) {
@@ -120,7 +126,10 @@ async function handlePayment(): Promise<void> {
   const success = await checkoutStore.placeOrder(stripe, elements, locale.value)
 
   if (!success) {
-    error.value = checkoutStore.paymentError || t('checkout.payment_error')
+    const pe = checkoutStore.paymentError
+    error.value = pe
+      ? (pe.startsWith('checkout.') ? t(pe) : pe)
+      : t('checkout.payment_error')
   }
 
   isLoading.value = false
@@ -145,7 +154,7 @@ async function handlePayment(): Promise<void> {
         <button
           type="button"
           @click="copyTestValue(TEST_CARD.number, 'number')"
-          class="px-3 py-2 text-sm font-mono bg-white border border-amber-200 rounded-lg hover:bg-amber-100 transition"
+          class="px-3 py-2 text-sm font-mono bg-white border border-amber-200 rounded-lg hover:bg-amber-100 transition cursor-pointer"
         >
           {{ TEST_CARD.number }}
           <span class="ml-1 text-xs text-amber-700">
@@ -156,7 +165,7 @@ async function handlePayment(): Promise<void> {
         <button
           type="button"
           @click="copyTestValue(TEST_CARD.exp, 'exp')"
-          class="px-3 py-2 text-sm font-mono bg-white border border-amber-200 rounded-lg hover:bg-amber-100 transition"
+          class="px-3 py-2 text-sm font-mono bg-white border border-amber-200 rounded-lg hover:bg-amber-100 transition cursor-pointer"
         >
           {{ TEST_CARD.exp }}
           <span class="ml-1 text-xs text-amber-700">
@@ -167,7 +176,7 @@ async function handlePayment(): Promise<void> {
         <button
           type="button"
           @click="copyTestValue(TEST_CARD.cvc, 'cvc')"
-          class="px-3 py-2 text-sm font-mono bg-white border border-amber-200 rounded-lg hover:bg-amber-100 transition"
+          class="px-3 py-2 text-sm font-mono bg-white border border-amber-200 rounded-lg hover:bg-amber-100 transition cursor-pointer"
         >
           CVC {{ TEST_CARD.cvc }}
           <span class="ml-1 text-xs text-amber-700">
@@ -179,6 +188,17 @@ async function handlePayment(): Promise<void> {
 
     <div :key="keyForPaymentElement" id="payment-element" class="mb-6" />
 
+    <label class="flex items-start gap-3 mb-6 cursor-pointer">
+      <input
+        type="checkbox"
+        v-model="checkoutStore.termsAccepted"
+        class="mt-1 w-5 h-5 accent-sky-500 cursor-pointer"
+      />
+      <span class="text-sm text-gray-700">
+        {{ t('checkout.summary.acceptTerms') }}
+      </span>
+    </label>
+
     <p v-if="error" class="text-red-600 text-sm mb-4" role="alert">
       {{ error }}
     </p>
@@ -186,8 +206,8 @@ async function handlePayment(): Promise<void> {
     <button
       type="button"
       @click="handlePayment"
-      :disabled="isLoading || checkoutStore.isProcessingOrder"
-      class="w-full py-4 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-xl disabled:opacity-50 transition"
+      :disabled="isLoading || checkoutStore.isProcessingOrder || !checkoutStore.termsAccepted"
+      class="w-full py-4 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
     >
       {{
         isLoading || checkoutStore.isProcessingOrder

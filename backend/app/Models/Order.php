@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany; // ⬅️ KRITIKUS JAVÍTÁS (1)
+use Illuminate\Database\Eloquent\Relations\HasMany; 
 use App\Models\User;
 use App\Models\Product;
-use App\Models\OrderItem; // ⬅️ KRITIKUS JAVÍTÁS (2)
+use App\Models\OrderItem;
 
 class Order extends Model
 {
@@ -22,7 +22,8 @@ class Order extends Model
         'payment_method',
         'status',
         'payment_intent_id',
-        'locale'
+        'locale',
+        'currency',
     ];
 
     protected $attributes = [
@@ -37,6 +38,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function resolvedCurrency(): string
+    {
+        return $this->currency ?? ($this->locale === 'hu' ? 'huf' : 'eur');
     }
     
     

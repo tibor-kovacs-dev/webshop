@@ -29,6 +29,7 @@ class OrderController extends Controller
                 'created_at' => $order->created_at,
                 'order_total' => (float) $order->order_total,
                 'status' => $order->status,
+                'currency' => $order->resolvedCurrency(),
                 'payment_method' => $order->payment_method,
                 'shipping_details' => $order->shipping_details,
                 'items' => $order->items->map(function ($item) {
@@ -88,7 +89,7 @@ class OrderController extends Controller
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.price_at_purchase' => 'required|numeric|min:0',
             'locale' => 'required|string|in:hu,en,de',
-            'currency' => 'nullable|string',
+            'currency' => 'nullable|string|in:HUF,EUR,huf,eur',
         ]);
 
         try {
@@ -104,6 +105,9 @@ class OrderController extends Controller
                 'status' => $validatedData['status'],
                 'payment_intent_id' => $validatedData['payment_intent_id'],
                 'locale' => $validatedData['locale'],
+                'currency' => isset($validatedData['currency'])
+                    ? strtolower($validatedData['currency'])
+                    : ($validatedData['locale'] === 'hu' ? 'huf' : 'eur'),
             ]);
 
             foreach ($validatedData['items'] as $item) {
@@ -175,12 +179,11 @@ class OrderController extends Controller
 
         try {
             $amountInSmallestUnit = (int) round($order->order_total);
+            $currency = $order->resolvedCurrency();
 
-            if ($order->locale === 'hu' && $amountInSmallestUnit < 175) {
+            if ($currency === 'huf' && $amountInSmallestUnit < 175) {
                 return response()->json(['message' => 'The amount is too low for payment.'], 400);
             }
-
-            $currency = ($order->locale === 'hu') ? 'huf' : 'eur';
 
             $intent = PaymentIntent::create([
                 'amount' => $amountInSmallestUnit,

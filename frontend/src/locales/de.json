@@ -276,6 +276,14 @@
       "error_message": "Fehler: Die Zahlung konnte nicht abgeschlossen werden.",
       "redirecting": "Weiterleitung zur Zusammenfassung...",
       "back_to_checkout": "Zurück zur Kasse"
+    },
+    "errors": {
+      "intentFailed": "Kartenzahlung konnte nicht vorbereitet werden.",
+      "finalizeFailed": "Bestellung konnte nicht abgeschlossen werden.",
+      "missingData": "Unvollständige Daten für die Bestellung.",
+      "termsRequired": "Die AGB müssen akzeptiert werden.",
+      "paymentFailed": "Zahlung fehlgeschlagen.",
+      "orderFailed": "Bestellung konnte nicht gespeichert werden."
     }
   },
   "profile": {
