@@ -17,6 +17,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Electronics',
                 'name' => 'Smartphone XYZ',
+                'slug' => 'smartphone-xyz',
                 'description' => json_encode([
                     'en' => 'The Smartphone XYZ is the latest innovation in mobile technology offering 5G, 48MP camera and all-day battery life.',
                     'de' => 'Das Smartphone XYZ ist die neueste Innovation...',
@@ -40,6 +41,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Electronics',
                 'name' => 'Laptop ABC',
+                'slug' => 'laptop-abc',
                 'description' => json_encode([
                     'en' => 'Laptop ABC is designed for professionals and gamers.',
                     'de' => 'Der Laptop ABC wurde für Profis entwickelt.',
@@ -59,10 +61,11 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Home Appliances',
                 'name' => 'Blender 2000',
+                'slug' => 'blender-2000',
                 'description' => json_encode([
                     'en' => 'Essential kitchen tool for smoothies, soups and sauces.',
                     'de' => 'Unverzichtbares Küchenwerkzeug.',
-                    'hu' => 'Alapvető konyhai eszköz.'
+                    'hu' => 'Alapvető konyhai eszk.'
                 ]),
                 'image' => '/images/blender-2000.webp',
                 'gallery_images' => null,
@@ -78,6 +81,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Furniture',
                 'name' => 'Office Chair Comfort',
+                'slug' => 'office-chair-comfort',
                 'description' => json_encode([
                     'en' => 'Ergonomic chair for long working hours.',
                     'de' => 'Ergonomischer Bürostuhl.',
@@ -97,6 +101,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Electronics',
                 'name' => 'Smartwatch V2',
+                'slug' => 'smartwatch-v2',
                 'description' => json_encode([
                     'en' => 'Fitness tracking and smart notifications.',
                     'de' => 'Fitness-Tracking und Smart Notifications.',
@@ -116,6 +121,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Electronics',
                 'name' => 'Wireless Earbuds Pro',
+                'slug' => 'wireless-earbuds-pro',
                 'description' => json_encode([
                     'en' => 'High-quality sound with noise cancellation.',
                 ]),
@@ -133,6 +139,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Home Appliances',
                 'name' => 'Coffee Maker Elite',
+                'slug' => 'coffee-maker-elite',
                 'description' => json_encode([
                     'en' => 'Perfect coffee every time.',
                 ]),
@@ -150,6 +157,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Furniture',
                 'name' => 'Adjustable Standing Desk',
+                'slug' => 'adjustable-standing-desk',
                 'description' => json_encode([
                     'en' => 'Switch between sitting and standing easily.',
                 ]),
@@ -167,6 +175,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Home Appliances',
                 'name' => 'Air Purifier 5000',
+                'slug' => 'air-purifier-5000',
                 'description' => json_encode([
                     'en' => 'Keeps your air clean and fresh.',
                 ]),
@@ -184,6 +193,7 @@ class ProductSeeder extends Seeder
             [
                 'category' => 'Electronics',
                 'name' => '4K TV 55',
+                'slug' => '4k-tv-55',
                 'description' => json_encode([
                     'en' => 'Ultra HD cinematic experience.',
                 ]),

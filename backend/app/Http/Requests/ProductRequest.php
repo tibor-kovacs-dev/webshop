@@ -6,38 +6,42 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    private const IMAGE_RULES = [
+        'string',
+        'max:255',
+        'regex:#^(https?://[^\s]+|/[A-Za-z0-9._/\-]+)$#',
+        'not_regex:#\.\.#',
+    ];
+
     public function authorize(): bool
     {
-        return true;
+        return (bool) $this->user()?->is_admin;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        if($this->method() == 'PATCH'){
+        if ($this->isMethod('PATCH')) {
             return [
-            'category' => 'nullable|string|min:2',
-            'name' => 'nullable|string|min:3',
-            'description' => 'nullable|string|min:10',
-            'image' => 'nullable|string|min:20',
-            'price' => 'nullable|numeric|',
-            'stock' => 'nullable|numeric|',
-        ];
+                'category' => 'sometimes|required|string|min:2',
+                'name' => 'sometimes|required|string|min:3',
+                'slug' => 'sometimes|required|string|min:3|unique:products,slug,' . $this->route('id'),
+                'description' => 'sometimes|required|string|min:10',
+                'image' => array_merge(['sometimes', 'required'], self::IMAGE_RULES),
+                'price' => 'sometimes|required|numeric|min:0',
+                'discount' => 'sometimes|required|numeric|min:0|max:100',
+                'stock' => 'sometimes|required|integer|min:0',
+            ];
         }
+
         return [
             'category' => 'required|string|min:2',
             'name' => 'required|string|min:3',
+            'slug' => 'required|string|min:3|unique:products,slug',
             'description' => 'required|string|min:10',
-            'image' => 'required|string|min:20',
-            'price' => 'required|numeric|',
-            'stock' => 'required|numeric|',
+            'image' => array_merge(['required'], self::IMAGE_RULES),
+            'price' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
+            'stock' => 'required|integer|min:0',
         ];
     }
 }
