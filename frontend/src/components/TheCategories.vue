@@ -7,6 +7,7 @@ import CategoryCard from '@/components/CategoryCard.vue';
 import CategoryCardSkeleton from './skeletons/CategoryCardSkeleton.vue';
 import ProductCarousel from '@/components/ProductCarousel.vue';
 import { useApi } from '@/composables/useApi';
+import { useErrorMessage } from '@/composables/useErrorMessage';
 
 interface CategoryDisplay {
   id: string;
@@ -16,8 +17,9 @@ interface CategoryDisplay {
 }
 
 const { t } = useI18n();
+const { translateError } = useErrorMessage();
 const productStore = useProductStore();
-const { getFullUrl } = useApi();
+const { getFullUrl, apiBaseUrl } = useApi();
 
 const categories = ref<CategoryDisplay[]>([]);
 const isLoading = ref(true);
@@ -27,14 +29,12 @@ const newArrivals = computed(() => productStore.newArrivals);
 const discountedProducts = computed(() => productStore.discountedProducts);
 const specialsLoading = computed(() => productStore.specialsLoading);
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-
 const fetchCategories = async () => {
   isLoading.value = true;
   error.value = null;
 
   try {
-    const response = await axios.get<{ products: Product[] }>(`${API_BASE_URL}/api/products`);
+    const response = await axios.get<{ products: Product[] }>(`${apiBaseUrl}/api/products`);
     const allProducts = response.data?.products || [];
 
     const categoriesMap = allProducts.reduce((acc: Record<string, { title: string, image: string }>, product) => {
@@ -58,8 +58,8 @@ const fetchCategories = async () => {
       };
     });
   } catch (err) {
-    console.error('Hiba a kategóriák lekérése közben:', err);
-    error.value = t('error.categoryLoadFailed') || 'Failed to load categories';
+    console.error('Failed to load the categories:', err);
+    error.value = 'errors.products.categoriesFailed';
   } finally {
     isLoading.value = false;
   }
@@ -96,7 +96,7 @@ onMounted(() => {
       </div>
 
       <div v-else-if="error" class="text-center text-lg text-red-600 font-semibold">
-        <p>{{ error }}</p>
+        <p>{{ translateError(error) }}</p>
       </div>
       
       <div v-else class="flex flex-wrap gap-5 relative justify-center">

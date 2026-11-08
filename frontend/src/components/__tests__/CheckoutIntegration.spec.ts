@@ -1,112 +1,136 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
+import axios from 'axios'
 import { useCheckoutStore } from '@/stores/checkoutStore'
 import { useCartStore } from '@/stores/cartStore'
 import { useAuthStore } from '@/stores/authStore'
-import axios from 'axios'
+import { makeCartItem, makePrices } from './fixtures'
 
 vi.mock('axios')
+vi.mock('@/router', () => ({
+  default: { push: vi.fn() },
+}))
+vi.mock('@/i18n/i18n', () => ({
+  getCurrentCurrency: () => 'huf',
+  default: {},
+}))
 
-describe('Checkout Folyamat Integráció', () => {
+const mockedGet = vi.mocked(axios.get)
+const mockedPost = vi.mocked(axios.post)
+
+const prepare = () => {
+  const checkoutStore = useCheckoutStore()
+  const cartStore = useCartStore()
+  const authStore = useAuthStore()
+
+  authStore.isAuthenticated = true
+  authStore.isInitialized = true
+  cartStore.items = [makeCartItem({ id: 1, name: 'Shoes', quantity: 1, prices: makePrices(9990, 28) })]
+
+  return { checkoutStore, cartStore, authStore }
+}
+
+describe('Checkout Flow Integration', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
-    vi.clearAllMocks()
+    vi.resetAllMocks()
     localStorage.clear()
   })
 
-  it('szállítási adatok kitöltése után a Store validnak érzékeli az állapotot', async () => {
-    const checkoutStore = useCheckoutStore()
-    const cartStore = useCartStore()
-    const authStore = useAuthStore()
-
-    authStore.isAuthenticated = true
-    cartStore.items = [{ id: 1, name: 'Cipő', price: 100, quantity: 1, discount: 0 } as any]
+  it('the store considers the state valid after shipping details are completed', () => {
+    const { checkoutStore } = prepare()
 
     expect(checkoutStore.isReadyToPlaceOrder).toBe(false)
 
     Object.assign(checkoutStore.shippingDetails, {
-      first_name: 'Teszt',
-      last_name: 'Elek',
+      first_name: 'John',
+      last_name: 'Doe',
       city: 'Budapest',
-      email: 'teszt@elek.hu',
-      phone: '+36301234567',
+      email: 'john.doe@example.com',
+      phone: '+36123456789',
       zipcode: '1011',
-      street: 'Fő utca',
-      house_number: '1'
+      street: 'Main Street',
+      house_number: '1',
     })
 
-    checkoutStore.paymentMethod = 'cash'
+    checkoutStore.paymentMethod = 'credit_card_stripe'
     checkoutStore.termsAccepted = true
-    checkoutStore.currentStep = 2 
+    checkoutStore.currentStep = 3
+
+    expect(checkoutStore.isReadyToPlaceOrder).toBe(false)
+
+    checkoutStore.paymentIntentClientSecret = 'pi_123_secret_456'
 
     expect(checkoutStore.isReadyToPlaceOrder).toBe(true)
   })
 
-  it('lekezeli a sikeres Stripe kártyás fizetési folyamatot', async () => {
-    const checkoutStore = useCheckoutStore()
-    const cartStore = useCartStore()
-    const authStore = useAuthStore()
+  it('the order can be placed after the payment secret is created', async () => {
+    const { checkoutStore } = prepare()
 
-    authStore.isAuthenticated = true
-    cartStore.items = [{ id: 1, name: 'Cipő', price: 100, quantity: 1, discount: 0 } as any]
+    checkoutStore.shippingDetails.first_name = 'John'
+    checkoutStore.shippingDetails.city = 'Budapest'
+    checkoutStore.paymentMethod = 'credit_card_stripe'
+    checkoutStore.termsAccepted = true
+    checkoutStore.currentStep = 3
+
+    mockedGet.mockResolvedValueOnce({ data: { '1': { prices: makePrices(9990, 28) } } })
+    mockedPost.mockResolvedValueOnce({ data: { client_secret: 'pi_123_secret_456', total: 9990, total_minor: 999000 } })
+
+    expect(await checkoutStore.createPaymentIntent()).toBe(true)
+    expect(checkoutStore.isReadyToPlaceOrder).toBe(true)
+  })
+
+  it('handles a successful Stripe card payment flow', async () => {
+    const { checkoutStore, cartStore } = prepare()
+
     checkoutStore.paymentMethod = 'credit_card_stripe'
     checkoutStore.paymentIntentClientSecret = 'pi_123_secret_456'
-
-    checkoutStore.shippingDetails.first_name = 'Teszt'
+    checkoutStore.shippingDetails.first_name = 'John'
     checkoutStore.shippingDetails.city = 'Budapest'
     checkoutStore.termsAccepted = true
 
-    ;(axios.post as any).mockResolvedValueOnce({ data: { order_id: 'ORD-123' } })
-
-    ;(axios.post as any).mockResolvedValueOnce({ status: 200 })
-
-    ;(axios.get as any).mockResolvedValueOnce({ data: [] })
-
+    mockedPost
+      .mockResolvedValueOnce({ data: { order_id: 'ORD-123' } })
+      .mockResolvedValueOnce({ status: 200 })
+    mockedGet.mockResolvedValueOnce({ data: [] })
 
     const mockStripe = {
-      confirmPayment: vi.fn().mockResolvedValue({ error: null }) // Sikerült a fizetés!
+      confirmPayment: vi.fn().mockResolvedValue({ error: null }),
     }
-    const mockElements = {}
 
-
-    const result = await checkoutStore.placeOrder(mockStripe, mockElements)
-
+    const result = await checkoutStore.placeOrder(mockStripe, {})
 
     expect(result).toBe(true)
     expect(mockStripe.confirmPayment).toHaveBeenCalledWith(
-      expect.objectContaining({
-        clientSecret: 'pi_123_secret_456'
-      })
+      expect.objectContaining({ clientSecret: 'pi_123_secret_456' }),
     )
-    expect(checkoutStore.currentStep).toBe(4) // Sikeres befejezés (Köszönő oldal)
+    expect(checkoutStore.currentStep).toBe(4)
     expect(checkoutStore.paymentError).toBeNull()
+    expect(cartStore.items).toHaveLength(0)
   })
 
-  it('lekezeli, ha a Stripe fizetés meghiúsul', async () => {
-    const checkoutStore = useCheckoutStore()
-    const cartStore = useCartStore()
-    const authStore = useAuthStore()
+  it('handles a failed Stripe payment and preserves the cart', async () => {
+    const { checkoutStore, cartStore } = prepare()
 
-    authStore.isAuthenticated = true
-    cartStore.items = [{ id: 1, name: 'Cipő', price: 100, quantity: 1 } as any]
     checkoutStore.paymentMethod = 'credit_card_stripe'
-    checkoutStore.shippingDetails.first_name = 'Teszt'
+    checkoutStore.paymentIntentClientSecret = 'pi_123_secret_456'
+    checkoutStore.shippingDetails.first_name = 'John'
     checkoutStore.shippingDetails.city = 'Budapest'
     checkoutStore.termsAccepted = true
 
-
-    ;(axios.post as any).mockResolvedValueOnce({ data: { order_id: 'ORD-123' } })
+    mockedPost.mockResolvedValueOnce({ data: { order_id: 'ORD-123' } })
 
     const mockStripe = {
-      confirmPayment: vi.fn().mockResolvedValue({ 
-        error: { message: 'A kártyán nincs elég fedezet.' } 
-      })
+      confirmPayment: vi.fn().mockResolvedValue({
+        error: { message: 'Insufficient funds on the card.' },
+      }),
     }
-    
+
     const result = await checkoutStore.placeOrder(mockStripe, {})
 
     expect(result).toBe(false)
-    expect(checkoutStore.paymentError).toBe('A kártyán nincs elég fedezet.')
+    expect(checkoutStore.paymentError).toBe('Insufficient funds on the card.')
     expect(checkoutStore.isProcessingOrder).toBe(false)
+    expect(cartStore.items).toHaveLength(1)
   })
 })

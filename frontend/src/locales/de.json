@@ -163,6 +163,7 @@
     "loggingIn": "Anmeldung...",
     "registering": "Registrierung...",
     "errorOccurred": "Ein Fehler ist aufgetreten!",
+    "passwordMin": "Das Passwort muss mindestens 8 Zeichen lang sein.",
     "success": "Erfolg!",
     "noAccount": "Noch kein Konto?",
     "hasAccount": "Bereits registriert?",
@@ -179,7 +180,11 @@
     "forgotPasswordTitle": "Passwort vergessen?",
     "sendResetLink": "Link senden",
     "sending": "Wird gesendet...",
-    "backToLogin": "Zurück zur Anmeldung"
+    "backToLogin": "Zurück zur Anmeldung",
+    "invalidCredentials": "Ungültige E-Mail-Adresse oder ungültiges Passwort.",
+    "loginFailed": "Bei der Anmeldung ist ein Fehler aufgetreten.",
+    "statusCheckFailed": "Der Anmeldestatus konnte nicht überprüft werden.",
+    "verificationEmailFailed": "Die Bestätigungs-E-Mail konnte nicht erneut gesendet werden."
   },
   "emailVerified": {
     "successTitle": "E-Mail bestätigt!",
@@ -303,7 +308,19 @@
       "confirmRefund": "Möchten Sie wirklich eine Rückerstattung für diese Bestellung beantragen?",
       "error": "Fehler beim Laden der Bestellung. Bitte versuchen Sie es später erneut.",
       "noOrders": "Sie haben noch keine Bestellungen aufgegeben.",
-      "backToHome": "Jetzt einkaufen"
+      "backToHome": "Jetzt einkaufen",
+      "unknownProduct": "Unbekanntes Produkt",
+      "errors": {
+        "notLoggedIn": "Sie sind nicht angemeldet.",
+        "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+        "loadFailed": "Die Bestellhistorie konnte nicht geladen werden."
+      },
+      "refund": {
+        "loginRequired": "Bitte melden Sie sich an, um eine Rückerstattung zu beantragen.",
+        "success": "Ihre Rückerstattungsanfrage wurde übermittelt.",
+        "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+        "failed": "Rückerstattung fehlgeschlagen: {message}"
+      }
     },
     "wishlist": {
       "title": "Wunschliste",
@@ -344,5 +361,17 @@
       }
     }
   },
-  "viewCategory": "Kategorie ansehen"
+  "viewCategory": "Kategorie ansehen",
+  "errors": {
+    "title": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen",
+    "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "products": {
+      "loadFailed": "Die Produkte konnten nicht geladen werden.",
+      "detailsFailed": "Die Produktdetails konnten nicht geladen werden.",
+      "slugMissing": "Der Produktlink ist ungültig.",
+      "categoryFailed": "Diese Kategorie konnte nicht geladen werden.",
+      "categoriesFailed": "Die Kategorien konnten nicht geladen werden."
+    }
+  }
 }

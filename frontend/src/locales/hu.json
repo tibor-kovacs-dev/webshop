@@ -163,6 +163,7 @@
     "loggingIn": "Bejelentkezés...",
     "registering": "Regisztráció...",
     "errorOccurred": "Hiba történt!",
+    "passwordMin": "A jelszónak legalább 8 karakter hosszúnak kell lennie.",
     "success": "Siker!",
     "noAccount": "Nincs még fiókod?",
     "hasAccount": "Van már fiókod?",
@@ -179,7 +180,11 @@
     "forgotPasswordTitle": "Elfelejtetted a jelszavad?",
     "sendResetLink": "Küldés",
     "sending": "Küldés folyamatban...",
-    "backToLogin": "Vissza a bejelentkezéshez"
+    "backToLogin": "Vissza a bejelentkezéshez",
+    "invalidCredentials": "Érvénytelen e-mail-cím vagy jelszó.",
+    "loginFailed": "Hiba történt a bejelentkezés során.",
+    "statusCheckFailed": "Nem sikerült ellenőrizni a bejelentkezési állapotot.",
+    "verificationEmailFailed": "Nem sikerült újraküldeni a megerősítő e-mailt."
   },
   "emailVerified": {
     "successTitle": "E-mail megerősítve!",
@@ -303,7 +308,19 @@
       "confirmRefund": "Biztosan visszatérítést kér a rendelésre?",
       "error": "Hiba történt a rendelés betöltésekor. Kérjük, próbálja újra később.",
       "noOrders": "Még nem rendeltél tőlünk semmit.",
-      "backToHome": "Kezdj el vásárolni"
+      "backToHome": "Kezdj el vásárolni",
+      "unknownProduct": "Ismeretlen termék",
+      "errors": {
+        "notLoggedIn": "A felhasználó nincs bejelentkezve.",
+        "sessionExpired": "A munkamenet lejárt. Kérjük, jelentkezzen be újra.",
+        "loadFailed": "Nem sikerült betölteni a rendelési előzményeket."
+      },
+      "refund": {
+        "loginRequired": "A visszatérítés kéréséhez kérjük, jelentkezzen be.",
+        "success": "A visszatérítési kérelem sikeresen beküldve.",
+        "sessionExpired": "A munkamenet lejárt. Kérjük, jelentkezzen be újra.",
+        "failed": "Visszatérítési hiba: {message}"
+      }
     },
     "wishlist": {
       "title": "Kívánságlista",
@@ -344,5 +361,17 @@
       }
     }
   },
-  "viewCategory": "Kategória megtekintése"
+  "viewCategory": "Kategória megtekintése",
+  "errors": {
+    "title": "Hiba történt",
+    "retry": "Újrapróbálkozás",
+    "generic": "Hiba történt. Kérjük, próbálja újra.",
+    "products": {
+      "loadFailed": "Nem sikerült betölteni a termékeket.",
+      "detailsFailed": "Nem sikerült betölteni a termék adatait.",
+      "slugMissing": "A termék hivatkozása érvénytelen.",
+      "categoryFailed": "Nem sikerült betölteni ezt a kategóriát.",
+      "categoriesFailed": "Nem sikerült betölteni a kategóriákat."
+    }
+  }
 }

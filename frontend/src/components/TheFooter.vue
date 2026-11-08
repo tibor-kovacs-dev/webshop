@@ -88,7 +88,7 @@ const thisYear = new Date().getFullYear();
                     <li>1234 New York, NY 10001, United States</li>
                     <li><a href="mailto:hello@demowebshop.com" class="hover:text-sky-600 transition">hello@demowebshop.com</a></li>
                     <li><a href="tel:+12125550123" class="hover:text-sky-600 transition">+1 (212) 555-0123</a></li>
-                    <li><li>{{ t('customerService') }}: 9:00 - 17:00</li></li>
+                    <li>{{ t('customerService') }}: 9:00 - 17:00</li>
                 </ul>
             </div>
 

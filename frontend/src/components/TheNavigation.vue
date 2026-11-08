@@ -2,11 +2,12 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import { useCartStore } from '@/stores/cartStore';
 import { useProductStore } from '@/stores/productStore';
+import { usePrice } from '@/composables/usePrice';
 import { faHeart, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faCartShopping, faXmark, faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import TheNavigatonSkeleton from './skeletons/TheNavigatonSkeleton.vue';
+import TheNavigationSkeleton from './skeletons/TheNavigationSkeleton.vue';
 
 interface Language {
   code: string;
@@ -18,6 +19,7 @@ const isOpen = ref(false);
 const isSearchFocused = ref(false);
 const productStore = useProductStore();
 const cartStore = useCartStore();
+const { unitPrice } = usePrice();
 
 const { categories, isLoading, searchQuery, filteredProducts } = storeToRefs(productStore);
 
@@ -40,7 +42,6 @@ onMounted(async() => {
     await productStore.fetchProducts();
   }
 });
-
 
 watch(localSearch, (newVal) => {
   productStore.updateSearchQuery(newVal);
@@ -70,7 +71,7 @@ watch(isOpen, (newVal: boolean) => {
 </script>
 
 <template>
-  <TheNavigatonSkeleton v-if="isLoading" />
+  <TheNavigationSkeleton v-if="isLoading" />
   <header v-else class="relative">
     <div class="lg:hidden">
       <nav class="bg-gradient-to-r from-sky-500 to-indigo-500 text-white fixed top-0 w-full z-50 shadow-lg">
@@ -117,7 +118,7 @@ watch(isOpen, (newVal: boolean) => {
               <img :src="product.image" class="w-12 h-12 object-cover rounded" />
               <div class="flex flex-col">
                 <span class="text-sm font-bold truncate">{{ product.name }}</span>
-                <span class="text-xs text-sky-600 font-bold">${{ product.price }}</span>
+                <span class="text-xs text-sky-600 font-bold">{{ $n(unitPrice(product), 'currency') }}</span>
               </div>
             </RouterLink>
           </div>
@@ -166,7 +167,7 @@ watch(isOpen, (newVal: boolean) => {
                   <img :src="product.image" class="w-10 h-10 object-cover rounded-md" />
                   <div class="flex flex-col">
                     <span class="text-sm font-semibold truncate w-64">{{ product.name }}</span>
-                    <span class="text-xs text-sky-600 font-bold">${{ product.price }}</span>
+                    <span class="text-xs text-sky-600 font-bold">{{ $n(unitPrice(product), 'currency') }}</span>
                   </div>
                 </RouterLink>
                 <RouterLink v-if="filteredProducts.length > 5" to="/shop" @click="isSearchFocused = false" class="block p-3 text-center text-xs font-bold text-gray-500 hover:bg-gray-100 uppercase border-t">

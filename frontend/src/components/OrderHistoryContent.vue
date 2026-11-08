@@ -1,19 +1,25 @@
 <script setup lang="ts">
-import { useOrderHistoryStore, type Order } from '@/stores/orderHistoryStore';
-import { onMounted, ref } from 'vue';
+import { useOrderHistoryStore } from '@/stores/orderHistoryStore';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
+import { usePrice } from '@/composables/usePrice';
 
 const { t } = useI18n();
 const historyStore = useOrderHistoryStore();
+const { orderAmount } = usePrice();
 
 const processingRefund = ref<Record<string | number, boolean>>({});
-const { orders, isLoading, error } = storeToRefs(historyStore);
+const { orders, isLoading, error, refundFeedback } = storeToRefs(historyStore);
 
 onMounted(() => {
     if (orders.value.length === 0 && !isLoading.value) {
         historyStore.fetchUserOrders();
     }
+});
+
+onBeforeUnmount(() => {
+    historyStore.clearRefundFeedback();
 });
 
 const handleRefund = async (orderId: string | number): Promise<void> => {
@@ -23,7 +29,7 @@ const handleRefund = async (orderId: string | number): Promise<void> => {
     try {
         await historyStore.requestRefund(orderId);
     } catch (e) {
-        console.error('Refund hiba:', e);
+        console.error('Refund request failed:', e);
     } finally {
         processingRefund.value[orderId] = false;
     }
@@ -34,16 +40,7 @@ const formatDate = (dateString: string | undefined): string => {
     return new Date(dateString).toLocaleDateString();
 };
 
-const safeAmount = (value: string | number | null | undefined): number => {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : 0;
-};
-
-// Formats an amount using the order's OWN currency, not the viewer's current
-// UI language — otherwise switching the app language would relabel old
-// orders with the wrong currency symbol without converting the amount.
-const formatOrderAmount = (value: string | number | null | undefined, currency: string | undefined): string => {
-    const amount = safeAmount(value);
+const formatOrderAmount = (amount: number, currency: string | undefined): string => {
     const normalizedCurrency = (currency || 'huf').toUpperCase();
     return new Intl.NumberFormat(undefined, {
         style: 'currency',
@@ -59,13 +56,22 @@ const formatOrderAmount = (value: string | number | null | undefined, currency: 
             {{ $t('profile.orderHistory.title') }}
         </h2>
 
+        <div
+            v-if="refundFeedback"
+            role="status"
+            class="mb-4 rounded-lg p-3 text-sm"
+            :class="refundFeedback.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-700'"
+        >
+            {{ $t(refundFeedback.key, refundFeedback.params ?? {}) }}
+        </div>
+
         <div v-if="isLoading" class="text-center p-10">
             <font-awesome-icon :icon="['fas', 'spinner']" spin class="text-3xl text-sky-500" />
             <p class="mt-2 text-gray-500">{{ $t('common.loading') }}</p>
         </div>
 
         <div v-else-if="error" class="text-center p-10 bg-red-50 text-red-700 rounded-lg">
-            <p>{{ error }}</p>
+            <p>{{ $t(error) }}</p>
         </div>
 
         <div v-else-if="orders.length === 0" class="text-center p-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
@@ -94,7 +100,7 @@ const formatOrderAmount = (value: string | number | null | undefined, currency: 
                 <div class="flex justify-between items-center py-2">
                     <span class="text-gray-600 font-medium">{{ $t('cart.total') }}:</span>
                     <span class="text-2xl font-black text-gray-900">
-                        {{ formatOrderAmount(order.order_total, order.currency) }}
+                        {{ formatOrderAmount(orderAmount(order.order_total_minor, order.order_total), order.currency) }}
                     </span>
                 </div>
 
@@ -110,7 +116,7 @@ const formatOrderAmount = (value: string | number | null | undefined, currency: 
                                 <img
                                     v-if="item.product?.image"
                                     :src="item.product.image"
-                                    :alt="item.product?.title || 'Termék'"
+                                    :alt="item.product?.title || $t('profile.orderHistory.unknownProduct')"
                                     class="w-full h-full object-contain"
                                 />
                                 <div
@@ -123,7 +129,7 @@ const formatOrderAmount = (value: string | number | null | undefined, currency: 
 
                             <div class="flex-1 min-w-0">
                                 <p class="text-gray-800 font-medium truncate">
-                                    {{ item.product?.title || 'Termék' }}
+                                    {{ item.product?.title || $t('profile.orderHistory.unknownProduct') }}
                                 </p>
                                 <p class="text-gray-500 text-xs mt-0.5">
                                     {{ item.quantity }}×
@@ -131,7 +137,7 @@ const formatOrderAmount = (value: string | number | null | undefined, currency: 
                             </div>
 
                             <span class="font-semibold text-gray-900 whitespace-nowrap">
-                                {{ formatOrderAmount(item.price_at_purchase, order.currency) }}
+                                {{ formatOrderAmount(orderAmount(item.price_at_purchase_minor, item.price_at_purchase), order.currency) }}
                             </span>
                         </li>
                     </ul>
