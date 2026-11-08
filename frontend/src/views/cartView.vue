@@ -9,19 +9,7 @@ import { RouterLink } from 'vue-router';
 
 const { t } = useI18n();
 const cartStore = useCartStore();
-const { convertPrice } = usePrice();
-
-const calculateItemTotal = (item: any): number => {
-  const basePrice = Number(item.price || 0);
-  const discount = Number(item.discount || 0);
-  const quantity = item.quantity || 1;
-
-  let effectivePrice = discount > 0 
-    ? basePrice * (1 - discount / 100) 
-    : basePrice;
-
-  return convertPrice(effectivePrice) * quantity;
-};
+const { lineTotal, listLineTotal } = usePrice();
 </script>
 
 <template>
@@ -34,7 +22,6 @@ const calculateItemTotal = (item: any): number => {
         {{ t('cart.title') || 'Kosaram' }}
       </h1>
 
-      <!-- Üres kosár -->
       <div v-if="cartStore.items.length === 0" class="text-center py-20">
         <p class="text-2xl text-gray-500 mb-6">{{ t('cart.empty') || 'A kosarad üres' }}</p>
         <RouterLink to="/" class="text-sky-600 hover:underline text-lg">
@@ -65,11 +52,11 @@ const calculateItemTotal = (item: any): number => {
 
           <div class="md:col-span-3 text-center md:text-right">
             <p class="text-2xl font-bold text-sky-600">
-              {{ $n(calculateItemTotal(item), 'currency') }}
+              {{ $n(lineTotal(item), 'currency') }}
             </p>
             
             <p v-if="item.discount > 0" class="text-sm text-red-500 line-through">
-              {{ $n(convertPrice(Number(item.price)), 'currency') }}
+              {{ $n(listLineTotal(item), 'currency') }}
             </p>
           </div>
 

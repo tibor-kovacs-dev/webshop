@@ -6,9 +6,11 @@ import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import TheBreadcrumb from '@/components/TheBreadcrumb.vue';
+import { usePrice } from '@/composables/usePrice';
 
 const { t } = useI18n();
 const historyStore = useOrderHistoryStore();
+const { orderAmount, orderLineAmount } = usePrice();
 
 const { orders, isLoading, error } = storeToRefs(historyStore);
 
@@ -21,11 +23,6 @@ onMounted((): void => {
 const formatDate = (dateString: string | undefined): string => {
   if (!dateString) return '';
   return new Date(dateString).toLocaleDateString();
-};
-
-const safeAmount = (value: string | number | null | undefined): number => {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : 0;
 };
 </script>
 
@@ -68,7 +65,7 @@ const safeAmount = (value: string | number | null | undefined): number => {
         <div class="flex justify-between items-center py-2 bg-gray-50 p-3 rounded-md mb-4">
           <span class="text-lg font-semibold">{{ t('orderHistory.total') }}:</span>
           <span class="text-2xl font-bold text-red-600">
-            {{ $n(safeAmount(order.order_total), 'currency') }}
+            {{ $n(orderAmount(order.order_total_minor, order.order_total), 'currency') }}
           </span>
         </div>
 
@@ -87,7 +84,7 @@ const safeAmount = (value: string | number | null | undefined): number => {
                 ({{ item.quantity }} db)
               </span>
               <span class="font-semibold text-gray-600">
-                {{ $n(safeAmount(item.price_at_purchase) * item.quantity, 'currency') }}
+                {{ $n(orderLineAmount(item.price_at_purchase_minor, item.price_at_purchase, item.quantity), 'currency') }}
               </span>
             </li>
           </ul>

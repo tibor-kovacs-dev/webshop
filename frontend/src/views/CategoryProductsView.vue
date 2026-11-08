@@ -4,14 +4,14 @@ import { useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/productStore';
 import TheNavigation from '@/components/TheNavigation.vue';
 import TheFooter from '@/components/TheFooter.vue';
-import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
 import ProductCardSkeleton from '@/components/skeletons/ProductCardSkeleton.vue';
 import TheBreadcrumb from '@/components/TheBreadcrumb.vue';
+import { useErrorMessage } from '@/composables/useErrorMessage';
 
-const { t } = useI18n();
 const route = useRoute();
 const productStore = useProductStore();
+const { translateError } = useErrorMessage();
 
 const props = defineProps<{
   categoryName?: string
@@ -53,7 +53,7 @@ watch(
     </div>
 
     <div v-else-if="productStore.error" class="text-center mt-10 text-red-600 font-semibold">
-      {{ productStore.error }}
+      {{ translateError(productStore.error) }}
     </div>
 
     <div v-else class="grid grid-cols-2 pt-5 md:grid-cols-3 lg:grid-cols-5 gap-6">
