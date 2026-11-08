@@ -6,14 +6,17 @@
 {{ __('mail.received.order_id') }}: **#{{ $order->id }}**
 
 @php
-    $currency = __('mail.currency');
+    $currencyCode = $order->resolvedCurrency();
+    $symbol = ['huf' => 'Ft', 'eur' => '€', 'usd' => '$'][$currencyCode] ?? strtoupper($currencyCode);
+    $decimals = $currencyCode === 'huf' ? 0 : 2;
+    $money = fn ($amount) => number_format((float) $amount, $decimals, ',', ' ') . ' ' . $symbol;
 @endphp
 
 <x-mail::panel>
 ### {{ __('mail.summary.title') }}
 **{{ __('mail.summary.date') }}:** {{ $order->created_at->format('Y. F d.') }}
 **{{ __('mail.summary.payment_method') }}:** {{ $order->payment_method }}
-**{{ __('mail.summary.paid') }}:** **{{ number_format($order->order_total, 0, ',', ' ') }} {{ $currency }}**
+**{{ __('mail.summary.paid') }}:** **{{ $money($order->order_total) }}**
 </x-mail::panel>
 
 <x-mail::button :url="url('/profile/orders/' . $order->id)">
@@ -26,13 +29,10 @@
 | {{ __('mail.items.product_name') }} | {{ __('mail.items.quantity') }} | {{ __('mail.items.unit_price') }} | {{ __('mail.items.total') }} |
 | :------------- | :-------------: | :-------------: | -------------: |
 @foreach ($order->items as $item)
-@php
-    $unitPrice = $item->price ?? 0;   <!-- Fontos: $item->price (OrderItem model) -->
-@endphp
-| {{ $item->product->name ?? 'Ismeretlen termék' }} | {{ $item->quantity }} db | {{ number_format($unitPrice, 0, ',', ' ') }} {{ $currency }} | {{ number_format($unitPrice * $item->quantity, 0, ',', ' ') }} {{ $currency }} | 
+| {{ $item->product->name ?? 'Ismeretlen termék' }} | {{ $item->quantity }} db | {{ $money($item->price ?? 0) }} | {{ $money(($item->price ?? 0) * $item->quantity) }} |
 @endforeach
-| | | {{ __('mail.items.shipping_fee') }}: | 0 {{ $currency }} | 
-| | | {{ __('mail.items.grand_total') }}: | {{ number_format($order->order_total, 0, ',', ' ') }} {{ $currency }} |
+| | | {{ __('mail.items.shipping_fee') }}: | {{ $money(0) }} |
+| | | {{ __('mail.items.grand_total') }}: | {{ $money($order->order_total) }} |
 </x-mail::table>
 
 {{ __('mail.received.footer_note') }}
