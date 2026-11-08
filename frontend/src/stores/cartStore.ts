@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import axios from 'axios'
 import { ref, computed } from 'vue'
 import { type Product } from './productStore'
 import { usePrice } from '@/composables/usePrice'
@@ -10,24 +11,15 @@ export interface CartItem extends Product {
 export const useCartStore = defineStore(
   'cart',
   () => {
-    const { convertPrice } = usePrice()
+    const { sumMinor } = usePrice()
 
     const items = ref<CartItem[]>([])
     const lastAddedProduct = ref<CartItem | null>(null)
     const showNotification = ref<boolean>(false)
 
-    const totalAmount = computed<number>(() => {
-      return items.value.reduce((sum, item) => {
-        let price = Number(item.price || 0)
-        const discount = Number(item.discount || 0)
+    const totalMinor = computed<number>(() => sumMinor(items.value))
 
-        let effectivePrice = discount > 0 ? price * (1 - discount / 100) : price
-
-        effectivePrice = convertPrice(effectivePrice)
-
-        return sum + effectivePrice * (item.quantity || 1)
-      }, 0)
-    })
+    const totalAmount = computed<number>(() => totalMinor.value / 100)
 
     const totalQuantity = computed<number>(() => {
       return items.value.reduce((total, item) => total + item.quantity, 0)
@@ -38,6 +30,7 @@ export const useCartStore = defineStore(
 
       if (existingItem) {
         existingItem.quantity++
+        existingItem.prices = product.prices ?? existingItem.prices
       } else {
         items.value.push({
           ...product,
@@ -74,6 +67,32 @@ export const useCartStore = defineStore(
       showNotification.value = false
     }
 
+    async function refreshPrices(): Promise<void> {
+      if (items.value.length === 0) return
+
+      try {
+        const response = await axios.get<Record<string, { prices: Product['prices'] }>>(
+          '/api/products/prices',
+          {
+            params: {
+              ids: items.value.map((item) => item.id).join(','),
+            },
+          },
+        )
+
+        const priceMap = response.data ?? {}
+
+        items.value = items.value
+          .filter((item) => priceMap[String(item.id)])
+          .map((item) => ({
+            ...item,
+            prices: priceMap[String(item.id)]?.prices,
+          }))
+      } catch (error) {
+        console.error('Cart price refresh failed:', error)
+      }
+    }
+
     function getTotalInCurrency(targetCurrency: string = 'HUF'): number {
       return totalAmount.value
     }
@@ -85,6 +104,7 @@ export const useCartStore = defineStore(
     return {
       items,
       totalQuantity,
+      totalMinor,
       totalAmount,
       lastAddedProduct,
       showNotification,
@@ -93,6 +113,7 @@ export const useCartStore = defineStore(
       removeAllOfItem,
       clearCart,
       resetCart,
+      refreshPrices,
       getTotalInCurrency,
     }
   },

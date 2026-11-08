@@ -1,68 +1,67 @@
 <script setup lang="ts">
-import { useCheckoutStore } from '@/stores/checkoutStore';
-import { useCartStore } from '@/stores/cartStore';
-import { ref, nextTick, watch } from 'vue';
-import { loadStripe } from '@stripe/stripe-js';
-import { getCurrentCurrency } from '@/i18n/i18n';
-import { useI18n } from 'vue-i18n';
+import { useCheckoutStore } from '@/stores/checkoutStore'
+import { useCartStore } from '@/stores/cartStore'
+import { ref, nextTick, watch } from 'vue'
+import { loadStripe } from '@stripe/stripe-js'
+import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n();
+const { t } = useI18n()
+const checkoutStore = useCheckoutStore()
+const cartStore = useCartStore()
 
-const checkoutStore = useCheckoutStore();
-const cartStore = useCartStore();
-
-const stripe = ref<any>(null);
-const elements = ref<any>(null);
-const expressCheckout = ref<any>(null);
-const expressContainer = ref<HTMLDivElement | null>(null);
-const showExpressCheckout = ref(false);
+const stripe = ref<any>(null)
+const elements = ref<any>(null)
+const expressCheckout = ref<any>(null)
+const expressContainer = ref<HTMLDivElement | null>(null)
+const showExpressCheckout = ref(false)
 
 watch(() => checkoutStore.paymentIntentClientSecret, async (clientSecret) => {
-  if (!clientSecret) return;
+  if (!clientSecret) return
 
-  const stripeKey = (import.meta as any).env.VITE_STRIPE_PUBLIC_KEY;
-  stripe.value = await loadStripe(stripeKey);
-
-  if (!stripe.value) return;
+  const stripeKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY as string
+  stripe.value = await loadStripe(stripeKey)
+  if (!stripe.value) return
 
   elements.value = stripe.value.elements({
-    clientSecret: clientSecret,
-    appearance: { theme: 'stripe', variables: { colorPrimary: '#0ea5e9' } }
-  });
+    clientSecret,
+    appearance: {
+      theme: 'stripe',
+      variables: { colorPrimary: '#0ea5e9' },
+    },
+  })
 
   expressCheckout.value = elements.value.create('expressCheckout', {
     wallets: { applePay: 'auto', googlePay: 'auto' },
-    style: { expressCheckout: { height: '56px' } }
-  });
+    style: { expressCheckout: { height: '56px' } },
+  })
 
   expressCheckout.value.on('ready', (event: any) => {
-    if (event.available) {
-      showExpressCheckout.value = true;
-      watch(expressContainer, async (newVal) => {
-        if (newVal && expressCheckout.value) {
-          await nextTick();
-          expressCheckout.value.mount(newVal);
-        }
-      }, { immediate: true });
-    }
-  });
+    if (!event.available) return
 
-  watch(() => cartStore.totalAmount, (newTotal) => {
-    if (expressCheckout.value) {
-      const currency = getCurrentCurrency().toLowerCase();
-      const amount = currency === 'huf' 
-        ? Math.round(newTotal) 
-        : Math.round(newTotal * 100);
+    showExpressCheckout.value = true
+    watch(expressContainer, async (container) => {
+      if (container && expressCheckout.value) {
+        await nextTick()
+        expressCheckout.value.mount(container)
+      }
+    }, { immediate: true })
+  })
+
+  watch(
+    () => cartStore.totalMinor,
+    (newTotalMinor) => {
+      if (!expressCheckout.value) return
 
       expressCheckout.value.update({
         total: {
           label: t('checkout.express.total_label'),
-          amount: amount
-        }
-      });
-    }
-  }, { immediate: true });
-}, { immediate: true });
+          amount: newTotalMinor,
+        },
+      })
+    },
+    { immediate: true },
+  )
+}, { immediate: true })
 </script>
 
 <template>
@@ -78,7 +77,7 @@ watch(() => checkoutStore.paymentIntentClientSecret, async (clientSecret) => {
       </p>
     </div>
 
-    <div class="relative my-6" v-if="showExpressCheckout"></div>
+    <div v-if="showExpressCheckout" class="relative my-6"></div>
 
     <div
       role="radio"

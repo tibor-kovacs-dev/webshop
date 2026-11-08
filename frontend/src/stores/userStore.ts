@@ -1,88 +1,108 @@
-import axios from 'axios';
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { useAuthStore, type User } from './authStore';
+import axios from 'axios'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { useAuthStore, type User } from './authStore'
 
 export const useUserStore = defineStore('user', () => {
-    const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL as string;
+  const user = ref<User | null>(null)
+  const isLoading = ref<boolean>(false)
+  const isUpdating = ref<boolean>(false)
+  const error = ref<string | null>(null)
+  const updateSuccess = ref<string | null>(null)
 
-    const user = ref<User | null>(null);
-    const isLoading = ref<boolean>(false);
-    const isUpdating = ref<boolean>(false); 
-    const error = ref<string | null>(null);
-    const updateSuccess = ref<string | null>(null);
+  const getUserData = async (): Promise<void> => {
+    const authStore = useAuthStore()
 
-    const getUserData = async (): Promise<void> => {
-        const authStore = useAuthStore();
-        const token = authStore.token || (authStore.user as any)?.token;
+    isLoading.value = true
+    error.value = null
 
-        if (!token) {
-            error.value = 'A felhasználó nincs bejelentkezve';
-            return;
-        }
+    try {
+      if (!authStore.isInitialized) {
+        await authStore.checkAuth()
+      }
 
-        isLoading.value = true;
-        error.value = null;
+      if (!authStore.isAuthenticated || !authStore.user) {
+        user.value = null
+        error.value = 'The user is not signed in'
+        return
+      }
 
-        try {
-            const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            user.value = response.data.user as User;
-        } catch (err: any) {
-            error.value = 'A profil adatok betöltése sikertelen';
-            if (err.response?.status === 401) {
-                authStore.logout();
-            }
-        } finally {
-            isLoading.value = false;
-        }
-    };
-    
-    const updateUserData = async (updatedData: Partial<User>): Promise<boolean> => {
-        const authStore = useAuthStore();
-        const token = authStore.token || (authStore.user as any)?.token;
+      user.value = authStore.user
+    } catch (err: any) {
+      user.value = null
+      error.value =
+        err.response?.data?.message ||
+        'Failed to load profile details'
+    } finally {
+      isLoading.value = false
+    }
+  }
 
-        if (!token) {
-            error.value = 'A felhasználó nincs bejelentkezve frissítéshez';
-            return false;
-        }
+  const updateUserData = async (
+    updatedData: Partial<User>,
+  ): Promise<boolean> => {
+    const authStore = useAuthStore()
 
-        isUpdating.value = true;
-        error.value = null;
-        updateSuccess.value = null;
+    if (!authStore.isAuthenticated || !authStore.user) {
+      error.value = 'The user must be signed in to update the profile'
+      return false
+    }
 
-        try {
-            const response = await axios.patch(`${API_BASE_URL}/api/users/profile`, updatedData, {
-                headers: {
-                    Authorization: `Bearer ${token}`, 
-                }
-            });
-            
-            user.value = response.data.user as User;
-            updateSuccess.value = response.data.message || 'A profil adatok sikeresen frissültek!';
-            return true;
-        } catch (err: any) {
-            if (err.response && err.response.status === 422) {
-                error.value = 'Hibás adatok. Kérjük ellenőrizze az űrlapot.';
-            } else {
-                error.value = err.response?.data?.message || 'Ismeretlen hiba történt a mentés során';
-            }
-            return false;
-        } finally {
-            isUpdating.value = false;
-        }
-    };
+    isUpdating.value = true
+    error.value = null
+    updateSuccess.value = null
 
-    return { 
-        user, 
-        isLoading, 
-        isUpdating,
-        error, 
-        updateSuccess,
-        getUserData, 
-        updateUserData 
-    };
-});
+    try {
+      const response = await axios.patch(
+        '/api/users/profile',
+        updatedData,
+      )
+
+      const updatedUser: User = response.data.user
+        ? response.data.user
+        : {
+            ...authStore.user,
+            ...updatedData,
+          }
+
+      authStore.user = updatedUser
+      user.value = updatedUser
+
+      updateSuccess.value =
+        response.data.message ||
+        'Profile details updated successfully!'
+
+      return true
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        user.value = null
+        await authStore.logout()
+      } else if (err.response?.status === 422) {
+        error.value = 'Invalid data. Please check the form.'
+      } else {
+        error.value =
+          err.response?.data?.message ||
+          'An unknown error occurred while saving'
+      }
+
+      return false
+    } finally {
+      isUpdating.value = false
+    }
+  }
+
+  const syncUser = (userData: User | null): void => {
+    user.value = userData
+  }
+
+  return {
+    user,
+    isLoading,
+    isUpdating,
+    error,
+    updateSuccess,
+    getUserData,
+    updateUserData,
+    syncUser,
+  }
+})

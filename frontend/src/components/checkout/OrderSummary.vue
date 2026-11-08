@@ -2,24 +2,13 @@
 import { useCheckoutStore } from '@/stores/checkoutStore';
 import { useCartStore } from '@/stores/cartStore';
 import { useI18n } from 'vue-i18n';
-import { usePrice } from '@/composables/usePrice';  
+import { usePrice } from '@/composables/usePrice';
 
 const { t } = useI18n();
-const { convertPrice } = usePrice();                
+const { lineTotal } = usePrice();
 
 const checkoutStore = useCheckoutStore();
 const cartStore = useCartStore();
-
-const getDisplayPrice = (item: any) => {
-  let price = Number(item.price || 0);
-  const discount = Number(item.discount || 0);
-
-  if (discount > 0) {
-    price = price * (1 - discount / 100);
-  }
-
-  return convertPrice(price) * (item.quantity || 1);
-};
 </script>
 
 <template>
@@ -83,7 +72,7 @@ const getDisplayPrice = (item: any) => {
             </div>
 
             <p class="font-semibold flex-shrink-0 text-white">
-              {{ $n(getDisplayPrice(item), 'currency') }}
+              {{ $n(lineTotal(item), 'currency') }}
             </p>
           </li>
         </ul>

@@ -18,196 +18,255 @@ export interface User {
   email_verified_at?: string | null
 }
 
-axios.defaults.withCredentials = false
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref<User | null>(null)
+  const isAuthenticated = ref<boolean>(false)
+  const isLoading = ref<boolean>(false)
+  const authError = ref<string | null>(null)
+  const isEmailVerified = ref<boolean>(false)
+  const authSuccessMessage = ref<string | null>(null)
+  const isInitialized = ref<boolean>(false)
 
-export const useAuthStore = defineStore(
-  'auth',
-  () => {
-    const user = ref<User | null>(null)
-    const token = ref<string | null>(null)
-    const isAuthenticated = ref<boolean>(false)
-    const isLoading = ref<boolean>(false)
-    const authError = ref<string | null>(null)
-    const isEmailVerified = ref<boolean>(false)
-    const authSuccessMessage = ref<string | null>(null)
-    const isInitialized = ref<boolean>(false)
+  const isChangingPassword = ref<boolean>(false)
+  const passwordChangeError = ref<string | null>(null)
 
-    const isChangingPassword = ref<boolean>(false)
-    const passwordChangeError = ref<string | null>(null)
+  let authCheckPromise: Promise<void> | null = null
 
-    const API_URL = (import.meta as any).env.VITE_API_BASE_URL as string
+  function setAuthenticatedUser(userData: User): void {
+    user.value = userData
+    isAuthenticated.value = true
+    isEmailVerified.value = !!userData.email_verified_at
+    isInitialized.value = true
+  }
 
-    function saveTokenAndAuthenticate(tokenValue: string, userData: Partial<User> = {}): void {
-      localStorage.setItem('authToken', tokenValue)
-      user.value = userData as User
-      token.value = tokenValue
-      isAuthenticated.value = true
-      isEmailVerified.value = !!userData.email_verified_at
+  function clearAuthState(): void {
+    user.value = null
+    isAuthenticated.value = false
+    isEmailVerified.value = false
+    isInitialized.value = true
+  }
+
+  function getServerMessage(error: any): string | null {
+    const message = error.response?.data?.message
+
+    return typeof message === 'string' && message.trim()
+      ? message
+      : null
+  }
+
+  async function checkAuth(): Promise<void> {
+    if (isInitialized.value) return
+
+    if (authCheckPromise) {
+      return authCheckPromise
     }
 
-    async function checkAuth(): Promise<void> {
+    authCheckPromise = (async () => {
       authError.value = null
-      authSuccessMessage.value = null
-      const localToken = localStorage.getItem('authToken')
-
-      if (!localToken) {
-        isAuthenticated.value = false
-        user.value = null
-        isInitialized.value = true
-        return
-      }
-
-      token.value = localToken
 
       try {
         const response = await axios.get('/api/users/me')
         const userData = response.data.user || response.data
-        user.value = userData as User
-        isAuthenticated.value = true
-        isEmailVerified.value = !!userData.email_verified_at
+
+        setAuthenticatedUser(userData as User)
       } catch (error: any) {
-        if (error.response?.status === 401 || error.response?.status === 403) {
+        if (
+          error.response?.status === 401 ||
+          error.response?.status === 403
+        ) {
+          clearAuthState()
+        } else {
+          authError.value = 'errors.auth.statusCheckFailed'
           isAuthenticated.value = false
-          user.value = null
-          localStorage.removeItem('authToken')
-        } else {
-          isAuthenticated.value = false
-          authError.value = 'Nem sikerült ellenőrizni a bejelentkezést.'
+          isInitialized.value = true
         }
       } finally {
-        isInitialized.value = true
+        authCheckPromise = null
       }
-    }
+    })()
 
-    async function login(email: string, password: string): Promise<boolean> {
-      isLoading.value = true
-      authError.value = null
-      authSuccessMessage.value = null
+    return authCheckPromise
+  }
 
-      try {
-        const response = await axios.post(`/api/users/login`, { email, password })
-        const tokenValue =
-          response.data.token || response.data.access_token || response.data.user?.token
+  async function login(
+    email: string,
+    password: string,
+  ): Promise<boolean> {
+    isLoading.value = true
+    authError.value = null
+    authSuccessMessage.value = null
 
-        if (tokenValue) {
-          saveTokenAndAuthenticate(tokenValue, response.data.user)
-          return true
-        } else {
-          authError.value = 'Sikertelen bejelentkezés: a szerver nem küldött tokent.'
-          return false
-        }
-      } catch (error: any) {
-        if (error.response?.status === 401 || error.response?.status === 422) {
-          authError.value = 'Érvénytelen e-mail cím vagy jelszó.'
-        } else {
-          authError.value = error.response?.data?.message || 'Hiba történt a bejelentkezés során.'
-        }
-        return false
-      } finally {
-        isLoading.value = false
+    try {
+      await axios.get('/sanctum/csrf-cookie')
+
+      await axios.post('/api/users/login', {
+        email,
+        password,
+      })
+
+      const response = await axios.get('/api/users/me')
+      const userData = response.data.user || response.data
+
+      setAuthenticatedUser(userData as User)
+
+      return true
+    } catch (error: any) {
+      clearAuthState()
+
+      if (
+        error.response?.status === 401 ||
+        error.response?.status === 422
+      ) {
+        authError.value = 'errors.auth.invalidCredentials'
+      } else {
+        authError.value =
+          getServerMessage(error) ||
+          'errors.auth.loginFailed'
       }
+
+      return false
+    } finally {
+      isLoading.value = false
     }
+  }
 
-    async function register(userData: any): Promise<boolean> {
-      isLoading.value = true
-      authError.value = null
-      authSuccessMessage.value = null
+  async function register(userData: Record<string, unknown>): Promise<boolean> {
+    isLoading.value = true
+    authError.value = null
+    authSuccessMessage.value = null
 
-      try {
-        const response = await axios.post(`${API_URL}/api/users/register`, userData)
-        if ([200, 201, 204].includes(response.status)) {
-          router.push('/login')
-          authSuccessMessage.value = 'Sikeres regisztráció! Ellenőrizd az e-mail fiókodat.'
-          return true
-        }
-        return false
-      } catch (error: any) {
-        authError.value = error.response?.data?.message || 'Hiba történt a regisztráció során.'
-        return false
-      } finally {
-        isLoading.value = false
-      }
-    }
+    try {
+      const response = await axios.post(
+        '/api/users/register',
+        userData,
+      )
 
-    async function resendVerificationEmail(): Promise<boolean> {
-      isLoading.value = true
-      try {
-        await axios.post(`${API_URL}/api/email/resend`)
-        authSuccessMessage.value = 'Ellenőrző e-mail elküldve.'
+      if ([200, 201, 204].includes(response.status)) {
+        authSuccessMessage.value = 'auth.registerSuccessMessage'
+
+        await router.push('/login')
+
         return true
-      } catch (error) {
-        authError.value = 'Hiba történt az újraküldés során.'
-        return false
-      } finally {
-        isLoading.value = false
       }
+
+      authError.value = 'errors.auth.registerFailed'
+
+      return false
+    } catch (error: any) {
+      const passwordErrors: unknown[] =
+        error.response?.data?.errors?.password || []
+
+      const hasPasswordLengthError = passwordErrors.some(
+        (message) =>
+          typeof message === 'string' &&
+          message.includes('at least 8 characters'),
+      )
+
+      if (hasPasswordLengthError) {
+        authError.value = 'auth.passwordMin'
+      } else {
+        authError.value =
+          getServerMessage(error) ||
+          'errors.auth.registerFailed'
+      }
+
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function resendVerificationEmail(): Promise<boolean> {
+    isLoading.value = true
+    authError.value = null
+    authSuccessMessage.value = null
+
+    try {
+      await axios.post('/api/email/resend')
+
+      authSuccessMessage.value = 'auth.resendSuccess'
+
+      return true
+    } catch (error: any) {
+      authError.value =
+        getServerMessage(error) ||
+        'errors.auth.verificationEmailFailed'
+
+      return false
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<boolean> {
+    passwordChangeError.value = null
+
+    if (user.value?.email === 'demo@example.com') {
+      passwordChangeError.value =
+        'profile.settings.passwordChange.demoBlocked'
+
+      return false
     }
 
-    async function changePassword(currentPassword: string, newPassword: string): Promise<boolean> {
+    isChangingPassword.value = true
+
+    try {
+      await axios.post('/api/users/change-password', {
+        current_password: currentPassword,
+        new_password: newPassword,
+      })
+
       passwordChangeError.value = null
 
-      if (user.value?.email === 'demo@example.com') {
-        passwordChangeError.value = 'profile.settings.passwordChange.demoBlocked'
-        return false
-      }
+      return true
+    } catch (error: any) {
+      const key = error.response?.data?.message_key
 
-      isChangingPassword.value = true
-      try {
-        await axios.post(
-          `${API_URL}/api/users/change-password`,
-          {
-            current_password: currentPassword,
-            new_password: newPassword,
-          },
-          {
-            headers: token.value ? { Authorization: `Bearer ${token.value}` } : {},
-          },
-        )
-        return true
-      } catch (error: any) {
-        const key = error.response?.data?.message_key
-        passwordChangeError.value =
-          key || error.response?.data?.message || 'profile.settings.passwordChange.failed'
-        return false
-      } finally {
-        isChangingPassword.value = false
-      }
+      passwordChangeError.value =
+        typeof key === 'string' && key.trim()
+          ? key
+          : getServerMessage(error) ||
+            'profile.settings.passwordChange.failed'
+
+      return false
+    } finally {
+      isChangingPassword.value = false
     }
+  }
 
-    function logout(): void {
-      isAuthenticated.value = false
-      user.value = null
-      token.value = null
-      isEmailVerified.value = false
-      authSuccessMessage.value = null
+  async function logout(): Promise<void> {
+    try {
+      await axios.post('/api/users/logout')
+    } catch {
+    } finally {
+      clearAuthState()
+
       authError.value = null
-      localStorage.removeItem('authToken')
-      router.push('/login')
-    }
+      authSuccessMessage.value = null
+      passwordChangeError.value = null
 
-    return {
-      user,
-      isAuthenticated,
-      isInitialized,
-      isLoading,
-      authError,
-      isEmailVerified,
-      authSuccessMessage,
-      token,
-      isChangingPassword,
-      passwordChangeError,
-      checkAuth,
-      login,
-      register,
-      logout,
-      resendVerificationEmail,
-      changePassword,
+      await router.push('/login')
     }
-  },
-  {
-    persist: {
-      storage: localStorage,
-      paths: ['token', 'isAuthenticated', 'user', 'isEmailVerified'],
-    } as any,
-  },
-)
+  }
+
+  return {
+    user,
+    isAuthenticated,
+    isInitialized,
+    isLoading,
+    authError,
+    isEmailVerified,
+    authSuccessMessage,
+    isChangingPassword,
+    passwordChangeError,
+    checkAuth,
+    login,
+    register,
+    logout,
+    resendVerificationEmail,
+    changePassword,
+  }
+})

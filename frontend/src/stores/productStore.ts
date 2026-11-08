@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { ref, computed } from 'vue'
+import type { ProductPrices } from '@/composables/usePrice'
 
 export interface Product {
   id: number | string
+  slug: string
   name: string
   price: number
+  prices?: ProductPrices
   discount: number
   image: string
   gallery_images?: string[]
@@ -37,23 +40,23 @@ export const useProductStore = defineStore('product', () => {
   const discountedProducts = ref<Product[]>([])
   const specialsLoading = ref<boolean>(false)
 
-
   const searchQuery = ref<string>('')
   let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 
-
   const filteredProducts = computed(() => {
     const query = searchQuery.value.toLowerCase().trim()
-    if (!query) return products.value
 
+    if (!query) return products.value
 
     const results = products.value.filter((product) => {
       const nameMatch = product.name?.toLowerCase().includes(query)
       const categoryMatch = product.category?.toLowerCase().includes(query)
+
       const descText =
         typeof product.description === 'string'
           ? product.description
           : JSON.stringify(product.description)
+
       const descriptionMatch = descText?.toLowerCase().includes(query)
 
       return nameMatch || categoryMatch || descriptionMatch
@@ -79,6 +82,7 @@ export const useProductStore = defineStore('product', () => {
 
   function updateSearchQuery(query: string): void {
     if (debounceTimeout) clearTimeout(debounceTimeout)
+
     debounceTimeout = setTimeout(() => {
       searchQuery.value = query
     }, 300)
@@ -86,31 +90,47 @@ export const useProductStore = defineStore('product', () => {
 
   function clearSearch(): void {
     if (debounceTimeout) clearTimeout(debounceTimeout)
+
     searchQuery.value = ''
   }
 
   async function fetchProducts(): Promise<void> {
     isLoading.value = true
     error.value = null
+
     try {
-      const response = await axios.get<{ products: Product[] }>(`${API_URL}/api/products`)
+      const response = await axios.get<{ products: Product[] }>(
+        `${API_URL}/api/products`,
+      )
+
       products.value = response.data.products
-    } catch (err: any) {
-      error.value = 'Hiba a termékek betöltésekor: ' + err.message
+    } catch (err) {
+      console.error('Failed to load products:', err)
+      error.value = 'errors.products.loadFailed'
       products.value = []
     } finally {
       isLoading.value = false
     }
   }
 
-  async function fetchProductById(id: number | string): Promise<Product | null> {
+  async function fetchProductBySlug(slug: string): Promise<Product | null> {
+    if (!slug) {
+      error.value = 'errors.products.slugMissing'
+      return null
+    }
+
     isLoading.value = true
     error.value = null
+
     try {
-      const response = await axios.get<Product>(`${API_URL}/api/products/${id}`)
+      const response = await axios.get<Product>(
+        `${API_URL}/api/products/${encodeURIComponent(slug)}`,
+      )
+
       return response.data
-    } catch (err: any) {
-      error.value = 'Hiba a termék részleteinek lekérésekor: ' + err.message
+    } catch (err) {
+      console.error('Failed to load the product details:', err)
+      error.value = 'errors.products.detailsFailed'
       return null
     } finally {
       isLoading.value = false
@@ -120,13 +140,16 @@ export const useProductStore = defineStore('product', () => {
   async function fetchProductsByCategory(categoryName: string): Promise<void> {
     isLoading.value = true
     error.value = null
+
     try {
       const response = await axios.get<Product[]>(
-        `${API_URL}/api/products/category/${categoryName}`,
+        `${API_URL}/api/products/category/${encodeURIComponent(categoryName)}`,
       )
+
       products.value = response.data
-    } catch (err: any) {
-      error.value = 'Hiba a kategória betöltésekor: ' + err.message
+    } catch (err) {
+      console.error('Failed to load the category:', err)
+      error.value = 'errors.products.categoryFailed'
       products.value = []
     } finally {
       isLoading.value = false
@@ -135,17 +158,23 @@ export const useProductStore = defineStore('product', () => {
 
   async function fetchCategories(): Promise<void> {
     if (categories.value.length > 0) return
+
     isLoading.value = true
     error.value = null
+
     try {
-      const response = await axios.get<string[]>(`${API_URL}/api/products/categories`)
+      const response = await axios.get<string[]>(
+        `${API_URL}/api/products/categories`,
+      )
+
       categories.value = response.data.map((catName, index) => ({
         id: index,
         name: catName,
         slug: catName,
       }))
-    } catch (err: any) {
-      error.value = 'Hiba a kategóriák lekérésekor: ' + err.message
+    } catch (err) {
+      console.error('Failed to load the categories:', err)
+      error.value = 'errors.products.categoriesFailed'
       categories.value = []
     } finally {
       isLoading.value = false
@@ -154,11 +183,17 @@ export const useProductStore = defineStore('product', () => {
 
   async function fetchNewArrivals(limit: number = 8): Promise<void> {
     specialsLoading.value = true
+    error.value = null
+
     try {
-      const response = await axios.get<Product[]>(`${API_URL}/api/products/new?limit=${limit}`)
+      const response = await axios.get<Product[]>(
+        `${API_URL}/api/products/new?limit=${limit}`,
+      )
+
       newArrivals.value = response.data
     } catch (err) {
-      console.error('Hiba az újdonságok lekérésekor:', err)
+      console.error('Failed to load new arrivals:', err)
+      error.value = 'errors.products.loadFailed'
     } finally {
       specialsLoading.value = false
     }
@@ -166,13 +201,17 @@ export const useProductStore = defineStore('product', () => {
 
   async function fetchDiscountedProducts(limit: number = 8): Promise<void> {
     specialsLoading.value = true
+    error.value = null
+
     try {
       const response = await axios.get<Product[]>(
         `${API_URL}/api/products/discounted?limit=${limit}`,
       )
+
       discountedProducts.value = response.data
     } catch (err) {
-      console.error('Hiba az akciós termékek lekérésekor:', err)
+      console.error('Failed to load discounted products:', err)
+      error.value = 'errors.products.loadFailed'
     } finally {
       specialsLoading.value = false
     }
@@ -192,7 +231,7 @@ export const useProductStore = defineStore('product', () => {
     updateSearchQuery,
     clearSearch,
     fetchProducts,
-    fetchProductById,
+    fetchProductBySlug,
     fetchProductsByCategory,
     fetchCategories,
     fetchNewArrivals,
