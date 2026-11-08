@@ -2,30 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 
 class UsersController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,  
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            
-            'phone' => $request->phone,
-            'zipcode' => $request->zipcode,
-            'city' => $request->city,
-            'street' => $request->street,
-            'house_number' => $request->house_number,
-            'apartment' => $request->apartment,
-        ]);
+        $validated = $request->validated();
+
+        $user = DB::transaction(function () use ($validated) {
+            return User::create([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'phone' => $validated['phone'] ?? null,
+                'zipcode' => $validated['zipcode'] ?? null,
+                'city' => $validated['city'] ?? null,
+                'street' => $validated['street'] ?? null,
+                'house_number' => $validated['house_number'] ?? null,
+                'apartment' => $validated['apartment'] ?? null,
+            ]);
+        });
 
         event(new Registered($user));
 
@@ -34,35 +40,54 @@ class UsersController extends Controller
 
     public function getAuthenticatedUser(Request $request)
     {
-        if ($request->user()) {
-            return response()->json(['user' => $request->user()]);
-        }
-        
-        return response()->json(['message' => 'Unauthenticated.'], 401);
-    }
+        $user = $request->user();
 
-    public function login(Request $request){
-        $email = $request->input('email');
-        $password = $request->input('password');
-
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $user = User::where('email', $email)->first();
-
-        if(!$user || !Hash::check($password, $password ? $user->password: '')){
+        if (! $user) {
             return response()->json([
-                'message' => 'Invalid email or password'
+                'message' => 'Unauthenticated.',
             ], 401);
         }
 
-        $user->tokens()->delete();
-        $user->token = $user->createToken('access')->plainTextToken;
+        return response()->json([
+            'user' => $user,
+        ]);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $request->ensureIsNotRateLimited();
+
+        $credentials = $request->only('email', 'password');
+
+        if (! Auth::guard('web')->attempt($credentials)) {
+            RateLimiter::hit($request->throttleKey(), 60);
+
+            return response()->json([
+                'message' => 'Invalid email or password.',
+            ], 401);
+        }
+
+        RateLimiter::clear($request->throttleKey());
+
+        $request->session()->regenerate();
 
         return response()->json([
-            'user' => $user
+            'message' => 'Login successful.',
+            'user' => $request->user('web'),
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        return response()->json([
+            'message' => 'Logout successful.',
         ]);
     }
 
@@ -71,21 +96,21 @@ class UsersController extends Controller
         $user = $request->user();
 
         $validated = $request->validate([
-            'first_name'   => 'sometimes|required|string|max:255',
-            'last_name'    => 'sometimes|required|string|max:255',
-            'phone'        => 'sometimes|nullable|string|max:30',
-            'zipcode'      => 'sometimes|nullable|string|max:20',
-            'city'         => 'sometimes|nullable|string|max:255',
-            'street'       => 'sometimes|nullable|string|max:255',
+            'first_name' => 'sometimes|required|string|max:255',
+            'last_name' => 'sometimes|required|string|max:255',
+            'phone' => 'sometimes|nullable|string|max:30',
+            'zipcode' => 'sometimes|nullable|string|max:20',
+            'city' => 'sometimes|nullable|string|max:255',
+            'street' => 'sometimes|nullable|string|max:255',
             'house_number' => 'sometimes|nullable|string|max:50',
-            'apartment'    => 'sometimes|nullable|string|max:50',
+            'apartment' => 'sometimes|nullable|string|max:50',
         ]);
 
         $user->fill($validated);
         $user->save();
 
         return response()->json([
-            'user' => $user,
+            'user' => $user->fresh(),
             'message' => 'A profil adatok sikeresen frissültek!',
         ]);
     }
@@ -101,21 +126,23 @@ class UsersController extends Controller
             ], 403);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'current_password' => 'required|string',
             'new_password' => 'required|string|min:8',
         ]);
 
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check(
+            $validated['current_password'],
+            $user->password
+        )) {
             return response()->json([
                 'message' => 'The current password is incorrect.',
                 'message_key' => 'profile.settings.passwordChange.currentIncorrect',
             ], 422);
         }
 
-        $user->password = Hash::make($request->new_password);
+        $user->password = $validated['new_password'];
         $user->save();
-        $user->tokens()->where('id', '!=', $request->user()->currentAccessToken()->id)->delete();
 
         return response()->json([
             'message' => 'Password changed successfully.',
