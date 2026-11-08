@@ -9,6 +9,7 @@ use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -29,6 +30,43 @@ class Product extends Model
         'rating_rate',
         'rating_count'
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Product $product) {
+            if (blank($product->slug)) {
+                $product->slug = static::generateUniqueSlug($product->name);
+            }
+        });
+    }
+    
+    public static function generateUniqueSlug(
+        string $name,
+        ?int $ignoreId = null
+    ): string {
+        $baseSlug = Str::slug($name);
+    
+        if ($baseSlug === '') {
+            $baseSlug = 'product';
+        }
+    
+        $slug = $baseSlug;
+        $counter = 2;
+    
+        while (
+            static::where('slug', $slug)
+                ->when(
+                    $ignoreId,
+                    fn ($query) => $query->where('id', '!=', $ignoreId)
+                )
+                ->exists()
+        ) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+    
+        return $slug;
+    }
 
     public array $translatable = ['description'];
 
