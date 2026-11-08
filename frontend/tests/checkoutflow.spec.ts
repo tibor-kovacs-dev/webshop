@@ -1,75 +1,348 @@
+
 import { test, expect } from '@playwright/test'
 
 test.describe('Checkout Flow E2E', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.route('**/api/checkout/payment-intent', async (route) => {
+  test('completes the checkout and payment flow successfully', async ({ page }) => {
+    const product = {
+      id: 1,
+      slug: 'test-product',
+      name: 'E2E Test Product',
+      price: 10,
+      prices: {
+        eur: {
+          list: 10,
+          final: 10,
+        },
+        huf: {
+          list: 3900,
+          final: 3900,
+        },
+      },
+      discount: 0,
+      image: '',
+      category: 'Electronics',
+      description: 'Test product for checkout E2E.',
+      stock: 10,
+      rating: {
+        rate: 5,
+        count: 1,
+      },
+    }
+
+    const user = {
+      id: 1,
+      first_name: 'Test',
+      last_name: 'User',
+      name: 'Test User',
+      email: 'e2e@example.com',
+      email_verified_at: '2026-01-01T10:00:00.000000Z',
+    }
+
+    let createIntentPayload: any = null
+    let orderPayload: any = null
+    let finalizePayload: any = null
+
+    // Mock authenticated user.
+    await page.route('**/api/users/me', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ client_secret: 'pi_mock_secret_123' }),
+        body: JSON.stringify({ user }),
       })
     })
 
-    await page.route('**/api/checkout/finalize', async (route) => {
+    // Mock product API endpoints.
+    await page.route('**/api/products**', async (route) => {
+      const url = new URL(route.request().url())
+      const pathname = url.pathname
+
+      if (pathname.endsWith('/prices')) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            '1': {
+              prices: product.prices,
+            },
+          }),
+        })
+
+        return
+      }
+
+      if (pathname.endsWith('/categories')) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(['Electronics']),
+        })
+
+        return
+      }
+
+      if (
+        pathname.endsWith('/new') ||
+        pathname.endsWith('/discounted')
+      ) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([product]),
+        })
+
+        return
+      }
+
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ success: true }),
+        body: JSON.stringify({
+          products: [product],
+        }),
       })
     })
-  })
 
-  test('Full Journey - Reliable Selectors', async ({ page }) => {
+    // Mock Stripe.js and Payment Element.
+    await page.route(/https:\/\/js\.stripe\.com\/v3\/?/, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/javascript',
+        body: `
+          (() => {
+            class MockStripe {
+              elements() {
+                return {
+                  create(type) {
+                    return {
+                      mount() {
+                        if (type === 'payment') {
+                          window.__stripePaymentElementMounted = true
+                        }
+                      },
+                      destroy() {},
+                      on() {},
+                      update() {},
+                    }
+                  },
+
+                  submit: async () => ({}),
+                }
+              }
+
+              confirmPayment() {
+                window.__stripeConfirmCalled = true
+
+                return Promise.resolve({})
+              }
+
+              retrievePaymentIntent() {
+                return Promise.resolve({
+                  paymentIntent: {
+                    id: 'pi_mock_123',
+                    status: 'succeeded',
+                  },
+                })
+              }
+            }
+
+            window.Stripe = function () {
+              return new MockStripe()
+            }
+
+            window.Stripe.version = 'mock'
+          })()
+        `,
+      })
+    })
+
+    // Mock PaymentIntent creation.
+    await page.route('**/api/checkout/create-intent', async (route) => {
+      createIntentPayload = route.request().postDataJSON()
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          client_secret: 'pi_mock_123_secret_mock',
+          payment_intent_id: 'pi_mock_123',
+          amount: 1000,
+          total: 10,
+          currency: 'eur',
+        }),
+      })
+    })
+
+    // Mock order creation and order history.
+    await page.route('**/api/orders', async (route) => {
+      if (route.request().method() === 'POST') {
+        orderPayload = route.request().postDataJSON()
+
+        await route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            message: 'Order successfully created.',
+            order_id: 42,
+          }),
+        })
+
+        return
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([]),
+      })
+    })
+
+    // Mock payment finalization.
+    await page.route('**/api/orders/finalize', async (route) => {
+      finalizePayload = route.request().postDataJSON()
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          message: 'Payment verified.',
+          payment_verified: true,
+          order_id: 42,
+          status: 'completed',
+          webhook_pending: false,
+        }),
+      })
+    })
+
+    // Open homepage.
     await page.goto('/')
+
+    // Add a product to the cart.
     await page
-      .getByRole('button', { name: /Add to Cart|Kosárba/i })
+      .getByRole('button', { name: /Add to Cart/i })
       .first()
       .click()
 
-    await page.getByRole('link', { name: /Cart|Kosár/i }).click()
+    // Close the cart notification.
+    const cartNotification = page.locator('.fixed.inset-0.z-50')
 
-    await expect(page).toHaveURL(/\/checkout\/cart/)
-    await page.click(
-      'button:has-text("Proceed to checkout"), button:has-text("Tovább a pénztárhoz")',
-    )
+    await expect(cartNotification).toBeVisible()
 
-    await expect(page).toHaveURL(/\/login/)
-    await page.locator('input[type="email"]').fill('tibii9423@gmail.com')
-    await page.locator('input[type="password"]').fill('98765432')
-    await page.locator('button[type="submit"]').click()
-    await expect(page).toHaveURL(/localhost:5173\/?$/);
+    await cartNotification.locator('button').first().click()
 
-    await page.getByRole('link', { name: '1', exact: true }).click();
-    await page.click(
-      'button:has-text("Proceed to checkout"), button:has-text("Tovább a pénztárhoz")',
-    )
-    await expect(page).toHaveURL(/.*checkout/)
+    await expect(cartNotification).toBeHidden()
 
-    await page.fill('#firstName', 'Tibor')
-    await page.fill('#lastName', 'Teszt')
-    await page.fill('#email', 'tibii9423@gmail.com')
-    await page.fill('#zipcode', '1234')
-    await page.fill('#city', 'Budapest')
-    await page.fill('#street', 'Teszt utca')
-    await page.fill('#house_number', '10')
+    // Open cart.
+    await page.goto('/checkout/cart')
 
-    await page.click('button:has-text("Continue"), button:has-text("Tovább")')
-    await page.getByRole('radio', { name: 'Kártyás fizetés' }).click();
-    await page.click('button:has-text("Continue"), button:has-text("Tovább")')
+    await expect(
+      page.getByText('E2E Test Product'),
+    ).toBeVisible()
 
+    // Proceed to checkout.
+    await page
+      .getByRole('button', { name: /Proceed to Checkout/i })
+      .click()
 
-    const terms = page.locator('input[type="checkbox"]').first()
-    if (await terms.isVisible()) await terms.check()
-    
-   
-    await page.locator('button:has-text("Order"), button:has-text("Rendelés")').click({ force: true })
-    await page.goto('/checkout/success?payment_intent_client_secret=pi_mock_secret_123')
-    await expect(page.locator('.animate-spin')).not.toBeVisible()
+    await expect(page).toHaveURL(/\/checkout$/)
 
+    // Fill shipping information.
+    await page.locator('#firstName').fill('Test')
+    await page.locator('#lastName').fill('User')
+    await page.locator('#email').fill('e2e@example.com')
+    await page.locator('#zipcode').fill('1234')
+    await page.locator('#city').fill('Budapest')
+    await page.locator('#street').fill('Test Street')
+    await page.locator('#house_number').fill('10')
 
-    const successTitle = page.locator('.bg-green-50 h1')
-    await expect(successTitle).toBeVisible()
-    await expect(successTitle).toContainText(/Thank you for your purchase!|Köszönjük/i)
-    await expect(page.locator('text=/5|4|3|2|1/')).toBeVisible()
+    // Continue to payment method.
+    await page
+      .getByRole('button', { name: 'Continue', exact: true })
+      .click()
+
+    await expect(
+      page.getByRole('heading', {
+        name: 'Choose Payment Method',
+      }),
+    ).toBeVisible()
+
+    // Select Stripe card payment.
+    await page
+      .getByRole('radio', { name: 'Credit Card Payment' })
+      .click()
+
+    await page
+      .getByRole('button', { name: 'Continue', exact: true })
+      .click()
+
+    // Verify that Stripe Payment Element was mounted.
+    await expect(
+      page.locator('#payment-element'),
+    ).toBeAttached()
+
+    await expect.poll(async () => {
+      return page.evaluate(
+        () => (window as any).__stripePaymentElementMounted === true,
+      )
+    }).toBe(true)
+
+    // Accept terms and conditions.
+    await page.locator('input[type="checkbox"]').check()
+
+    // Submit order and payment.
+    await page
+      .getByRole('button', { name: 'Place Order', exact: true })
+      .click()
+
+    // Verify successful checkout.
+    await expect(
+      page.getByRole('heading', {
+        name: 'Thank you for your purchase!',
+      }),
+    ).toBeVisible({
+      timeout: 10000,
+    })
+
+    // Verify PaymentIntent request.
+    expect(createIntentPayload).toMatchObject({
+      currency: 'eur',
+      items: [
+        {
+          id: 1,
+          quantity: 1,
+        },
+      ],
+    })
+
+    // Verify order creation request.
+    expect(orderPayload).toMatchObject({
+      payment_method: 'credit_card_stripe',
+      payment_intent_id: 'pi_mock_123',
+      currency: 'EUR',
+      items: [
+        {
+          product_id: 1,
+          quantity: 1,
+        },
+      ],
+    })
+
+    expect(JSON.parse(orderPayload.shipping_details)).toMatchObject({
+      first_name: 'Test',
+      last_name: 'User',
+      email: 'e2e@example.com',
+      city: 'Budapest',
+    })
+
+    // Verify Stripe confirmation.
+    expect(
+      await page.evaluate(
+        () => (window as any).__stripeConfirmCalled,
+      ),
+    ).toBe(true)
+
+    // Verify payment finalization.
+    expect(finalizePayload).toEqual({
+      payment_intent_id: 'pi_mock_123',
+    })
   })
 })
