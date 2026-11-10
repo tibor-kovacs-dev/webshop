@@ -5,6 +5,18 @@
   "installCommand": "npm install",
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://webshop-laravel-backend-production.up.railway.app/api/:path*"
+    },
+    {
+      "source": "/sanctum/:path*",
+      "destination": "https://webshop-laravel-backend-production.up.railway.app/sanctum/:path*"
+    },
+    {
+      "source": "/storage/:path*",
+      "destination": "https://webshop-laravel-backend-production.up.railway.app/storage/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
